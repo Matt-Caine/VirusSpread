@@ -148,7 +148,7 @@ class MyWindow(QMainWindow):
         self.lbl_viruses.move(20, 275)
 
         self.cbx_viruses.addItem("Use Custom")
-        self.cbx_viruses.addItems(["WannaCry", "ILOVEYOU", "CryptoLocker", "Sasser"])
+        self.cbx_viruses.addItems(["WannaCry", "ILOVEYOU", "CryptoLocker", "Sasser","*COVID-19"])
         self.cbx_viruses.setGeometry(19, 299, 100, 25)
 
         self.cbx_viruses.currentTextChanged.connect(self.on_combobox_changed)
@@ -207,21 +207,58 @@ class MyWindow(QMainWindow):
     def Click_test():
         print("Button Clicked")
 
+    def Disable_Custom(self):
+        self.lbl_propagation.setDisabled(True)
+        self.lbl_hibernation.setDisabled(True)
+        self.lbl_k_chance.setDisabled(True)
+        self.sbx_propagation.setDisabled(True)
+        self.sbx_hibernation.setDisabled(True)
+        self.sbx_k_chance.setDisabled(True)
+
+    def Enable_Custom(self):
+        self.lbl_propagation.setDisabled(False)
+        self.lbl_hibernation.setDisabled(False)
+        self.lbl_k_chance.setDisabled(False)
+        self.sbx_propagation.setDisabled(False)
+        self.sbx_hibernation.setDisabled(False)
+        self.sbx_k_chance.setDisabled(False)
+
+
     def on_combobox_changed(self, value):
-        if value == 'Use Custom':
-            self.lbl_propagation.setDisabled(False)
-            self.lbl_hibernation.setDisabled(False)
-            self.lbl_k_chance.setDisabled(False)
-            self.sbx_propagation.setDisabled(False)
-            self.sbx_hibernation.setDisabled(False)
-            self.sbx_k_chance.setDisabled(False)
+        if value == 'WannaCry':
+            self.Disable_Custom()
+            self.sbx_propagation.setValue(1)
+            self.sbx_hibernation.setValue(2)
+            self.sbx_k_chance.setValue(3)
+
+        elif value == 'ILOVEYOU':
+            self.Disable_Custom()
+            self.sbx_propagation.setValue(4)
+            self.sbx_hibernation.setValue(5)
+            self.sbx_k_chance.setValue(6)
+
+        elif value == 'CryptoLocker':
+            self.Disable_Custom()
+            self.sbx_propagation.setValue(7)
+            self.sbx_hibernation.setValue(8)
+            self.sbx_k_chance.setValue(9)
+
+        elif value == 'Sasser':
+            self.Disable_Custom()
+            self.sbx_propagation.setValue(10)
+            self.sbx_hibernation.setValue(11)
+            self.sbx_k_chance.setValue(12)
+
+        elif value == '*COVID-19':
+            self.Disable_Custom()
+            self.sbx_propagation.setValue(13)
+            self.sbx_hibernation.setValue(14)
+            self.sbx_k_chance.setValue(15)
+
         else:
-            self.lbl_propagation.setDisabled(True)
-            self.lbl_hibernation.setDisabled(True)
-            self.lbl_k_chance.setDisabled(True)
-            self.sbx_propagation.setDisabled(True)
-            self.sbx_hibernation.setDisabled(True)
-            self.sbx_k_chance.setDisabled(True)
+            self.Enable_Custom()
+            self.reset_parameters()
+
 
     def download_test(self):
         self.lbl_MattCaine.hide()
@@ -235,7 +272,7 @@ class MyWindow(QMainWindow):
 
     # --------Parameter Reset Button--------#
     def reset_parameters(self):
-        ret = QMessageBox.question(self, 'Parameter Reset', "Are you sure you want to reset all parameters?",
+        ret = QMessageBox.question(self, 'Parameter Reset', "Are you sure? This will reset all parameters.",
                                    QMessageBox.Yes | QMessageBox.Cancel, QMessageBox.Cancel)
         if ret == QMessageBox.Yes:
             self.sbx_networks.setValue(100)
