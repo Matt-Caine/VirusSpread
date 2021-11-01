@@ -1,16 +1,14 @@
 import sys
 from PyQt5 import QtWidgets, QtGui
-
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
-
-
 from PyQt5.QtGui import QPixmap
+from models import SIR
+
 
 class MyWindow(QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
         # ----------------------------------Initialize----------------------------------#
-
         #Run Button
         self.completed = 0
         self.btn_simulate = QtWidgets.QPushButton(self)
@@ -20,10 +18,6 @@ class MyWindow(QMainWindow):
         #dropodown
         self.lbl_viruses = QtWidgets.QLabel(self)
         self.cbx_viruses = QtWidgets.QComboBox(self)
-
-        # Progress bar
-        self.progress = QtWidgets.QProgressBar(self)
-        self.progress.hide()
 
         # name
         self.inp_name = QtWidgets.QLineEdit(self)
@@ -40,9 +34,9 @@ class MyWindow(QMainWindow):
         # hibernation_Days group
         self.sbx_hibernation = QtWidgets.QSpinBox(self)
         self.lbl_hibernation = QtWidgets.QLabel(self)
-        # k_chance group
-        self.sbx_k_chance = QtWidgets.QSpinBox(self)
-        self.lbl_k_chance = QtWidgets.QLabel(self)
+        # r_chance group
+        self.sbx_r_chance = QtWidgets.QSpinBox(self)
+        self.lbl_r_chance = QtWidgets.QLabel(self)
 
         # Iterations group
         self.sbx_days = QtWidgets.QSpinBox(self)
@@ -53,9 +47,10 @@ class MyWindow(QMainWindow):
         # Healthy group
         self.sbx_healthy = QtWidgets.QSpinBox(self)
         self.lbl_healthy = QtWidgets.QLabel(self)
-        # Networks group
-        self.lbl_networks = QtWidgets.QLabel(self)
-        self.sbx_networks = QtWidgets.QSpinBox(self)
+
+        # Virus Model
+        self.lbl_Virus_Model = QtWidgets.QLabel(self)
+        self.cbx_Virus_Model = QtWidgets.QComboBox(self)
 
         # Header Img
         self.Head_img = QPixmap('assets/img/Header.png')
@@ -65,7 +60,7 @@ class MyWindow(QMainWindow):
         self.lbl_MattCaine = QtWidgets.QLabel(self)
 
         # Window frame settings
-        self.setFixedSize(1000, 700)
+        self.setFixedSize(1700, 900)
         self.setWindowTitle("Comp3000 - Computer Virus Spread Simulation")
         self.icon = QtGui.QIcon()
         self.icon.addPixmap(QtGui.QPixmap('assets/img/Header.png'), QtGui.QIcon.Selected, QtGui.QIcon.On)
@@ -78,19 +73,17 @@ class MyWindow(QMainWindow):
         #----------------------------------Form----------------------------------#
 
         self.header.setPixmap(self.Head_img)
-        self.header.resize(1000, 50)
+        self.header.resize(1920, 50)
 
         self.lbl_MattCaine.setText("© Matt Caine - UoP - Comp3000 Project")
-        self.lbl_MattCaine.setGeometry(788, 679, 300, 20)
+        self.lbl_MattCaine.setGeometry(1490, 875, 300, 20)
 
-        self.lbl_name.setText("Simulation Name")
-        self.lbl_name.setGeometry(145, 70, 300, 20)
 
-        self.inp_name.setGeometry(145, 89, 300, 29)
+        self.sbx_hibernation.setDisabled(True)
 
         # ----------------------------------Titles----------------------------------#
 
-        self.lbl_Param_Header.setText("𝗡𝗼𝗱𝗲 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:")
+        self.lbl_Param_Header.setText("𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:")
         self.lbl_Param_Header.move(16, 50)
 
         self.lbl_virus_Header.setText("𝗩𝗶𝗿𝘂𝘀 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:")
@@ -102,15 +95,15 @@ class MyWindow(QMainWindow):
 
         #----------------------------------parameter Section----------------------------------#
 
-        #--------Networks--------#
-        self.lbl_networks.setText("Networks")
-        self.lbl_networks.move(20, 65)
+        #--------Virus Model--------#
+        self.lbl_Virus_Model.setText("Virus Model")
+        self.lbl_Virus_Model.move(20, 65)
 
-        self.sbx_networks.move(19, 89)
-        self.sbx_networks.setMinimum(1)
-        self.sbx_networks.setMaximum(99999)
-        self.sbx_networks.setValue(100)
-        self.sbx_networks.setSingleStep(100)
+        self.cbx_Virus_Model.addItem("✅ S.I.R")
+        self.cbx_Virus_Model.addItems(["❌ S.I.R/D", "❌ S.E.I.R", "❌ S.E.I.R/D", "❌ S.I.S"])
+        self.cbx_Virus_Model.setGeometry(19, 90, 100, 25)
+
+        self.cbx_Virus_Model.currentTextChanged.connect(self.on_model_combobox_changed)
 
         #--------Healthy--------#
         self.lbl_healthy.setText("Healthy")
@@ -147,23 +140,23 @@ class MyWindow(QMainWindow):
         self.lbl_viruses.setText("Use existing virus")
         self.lbl_viruses.move(20, 275)
 
-        self.cbx_viruses.addItem("Use Custom")
+        self.cbx_viruses.addItem("❌ Use Custom")
         self.cbx_viruses.addItems(["WannaCry", "ILOVEYOU", "CryptoLocker", "Sasser","*COVID-19"])
         self.cbx_viruses.setGeometry(19, 299, 100, 25)
 
-        self.cbx_viruses.currentTextChanged.connect(self.on_combobox_changed)
+        #self.cbx_viruses.currentTextChanged.connect(self.on_combobox_changed)
 
-        #self.cbx_viruses.setDisabled(True)
+        self.cbx_viruses.setDisabled(True)
 
 
         # --------propagation--------#
-        self.lbl_propagation.setText("Propagation (%)")
+        self.lbl_propagation.setText("Propagation Rate %")
         self.lbl_propagation.move(20, 323)
 
         self.sbx_propagation.move(19, 347)
         self.sbx_propagation.setMinimum(1)
         self.sbx_propagation.setMaximum(100)
-        self.sbx_propagation.setValue(1)
+        self.sbx_propagation.setValue(20)
         self.sbx_propagation.setSingleStep(5)
 
         # --------hibernation--------#
@@ -173,18 +166,18 @@ class MyWindow(QMainWindow):
         self.sbx_hibernation.move(19, 395)
         self.sbx_hibernation.setMinimum(1)
         self.sbx_hibernation.setMaximum(99999)
-        self.sbx_hibernation.setValue(30)
+        self.sbx_hibernation.setValue(0)
         self.sbx_hibernation.setSingleStep(10)
 
-        # --------kill_chance--------#
-        self.lbl_k_chance.setText("Kill (%)")
-        self.lbl_k_chance.move(20, 419)
+        # --------r_chance--------#
+        self.lbl_r_chance.setText("Recovery Rate %")
+        self.lbl_r_chance.move(20, 419)
 
-        self.sbx_k_chance.move(19, 443)
-        self.sbx_k_chance.setMinimum(1)
-        self.sbx_k_chance.setMaximum(100)
-        self.sbx_k_chance.setValue(40)
-        self.sbx_k_chance.setSingleStep(5)
+        self.sbx_r_chance.move(19, 443)
+        self.sbx_r_chance.setMinimum(1)
+        self.sbx_r_chance.setMaximum(100)
+        self.sbx_r_chance.setValue(10)
+        self.sbx_r_chance.setSingleStep(5)
 
 
         #--------Reset Button--------#
@@ -195,10 +188,10 @@ class MyWindow(QMainWindow):
 
         # ----------------------------------Simulate----------------------------------#
         self.btn_simulate.setText("Simulate")
-        self.btn_simulate.move(880, 650)
-        self.btn_simulate.clicked.connect(self.download_test)
+        self.btn_simulate.move(19, 690)
 
-        self.progress.setGeometry(4, 685, 1001, 11)
+        self.btn_simulate.clicked.connect(self.simulate)
+
 
 
     # ----------------------------------Functions----------------------------------#
@@ -207,82 +200,48 @@ class MyWindow(QMainWindow):
     def Click_test():
         print("Button Clicked")
 
-    def Disable_Custom(self):
-        self.lbl_propagation.setDisabled(True)
-        self.lbl_hibernation.setDisabled(True)
-        self.lbl_k_chance.setDisabled(True)
-        self.sbx_propagation.setDisabled(True)
-        self.sbx_hibernation.setDisabled(True)
-        self.sbx_k_chance.setDisabled(True)
-
-    def Enable_Custom(self):
-        self.lbl_propagation.setDisabled(False)
-        self.lbl_hibernation.setDisabled(False)
-        self.lbl_k_chance.setDisabled(False)
-        self.sbx_propagation.setDisabled(False)
-        self.sbx_hibernation.setDisabled(False)
-        self.sbx_k_chance.setDisabled(False)
-
-
-    def on_combobox_changed(self, value):
-        if value == 'WannaCry':
-            self.Disable_Custom()
-            self.sbx_propagation.setValue(1)
-            self.sbx_hibernation.setValue(2)
-            self.sbx_k_chance.setValue(3)
-
-        elif value == 'ILOVEYOU':
-            self.Disable_Custom()
-            self.sbx_propagation.setValue(4)
-            self.sbx_hibernation.setValue(5)
-            self.sbx_k_chance.setValue(6)
-
-        elif value == 'CryptoLocker':
-            self.Disable_Custom()
-            self.sbx_propagation.setValue(7)
-            self.sbx_hibernation.setValue(8)
-            self.sbx_k_chance.setValue(9)
-
-        elif value == 'Sasser':
-            self.Disable_Custom()
-            self.sbx_propagation.setValue(10)
-            self.sbx_hibernation.setValue(11)
-            self.sbx_k_chance.setValue(12)
-
-        elif value == '*COVID-19':
-            self.Disable_Custom()
-            self.sbx_propagation.setValue(13)
-            self.sbx_hibernation.setValue(14)
-            self.sbx_k_chance.setValue(15)
-
+    def on_model_combobox_changed(self, value):
+        if "E" in value:
+            self.sbx_hibernation.setDisabled(False)
         else:
-            self.Enable_Custom()
-            self.reset_parameters()
-
-
-    def download_test(self):
-        self.lbl_MattCaine.hide()
-        self.progress.show()
-        while self.completed < 100:
-            self.completed += 0.0001
-            self.progress.setValue(self.completed)
-
-        self.progress.hide()
-        self.lbl_MattCaine.show()
+            self.sbx_hibernation.setDisabled(True)
 
     # --------Parameter Reset Button--------#
     def reset_parameters(self):
         ret = QMessageBox.question(self, 'Parameter Reset', "Are you sure? This will reset all parameters.",
                                    QMessageBox.Yes | QMessageBox.Cancel, QMessageBox.Cancel)
         if ret == QMessageBox.Yes:
-            self.sbx_networks.setValue(100)
+            self.cbx_Virus_Model.setCurrentIndex(0)
             self.sbx_healthy.setValue(25000)
             self.sbx_infected.setValue(100)
             self.sbx_days.setValue(200)
-            self.sbx_propagation.setValue(1)
-            self.sbx_hibernation.setValue(30)
-            self.sbx_k_chance.setValue(40)
+            self.sbx_propagation.setValue(20)
+            self.sbx_hibernation.setValue(1)
+            self.sbx_r_chance.setValue(10)
             self.cbx_viruses.setCurrentIndex(0)
+
+    # -----------------------------------------------------MODELS-----------------------------------------------------#
+
+
+    def simulate(self):
+        try:
+            if self.cbx_Virus_Model.currentIndex() == 0:
+                SIR(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance)
+
+            elif self.cbx_Virus_Model.currentIndex() == 1:
+                    print("S.I.R/D")
+
+            elif self.cbx_Virus_Model.currentIndex() == 2:
+                    print("S.E.I.R")
+
+            elif self.cbx_Virus_Model.currentIndex() == 3:
+                    print("S.E.I.R/D")
+
+            elif self.cbx_Virus_Model.currentIndex() == 4:
+                    print("S.I.S")
+        except  ValueError:
+            print("Error...")
+
 
 
 # ----------------------------------Window----------------------------------#
