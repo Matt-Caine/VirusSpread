@@ -121,7 +121,7 @@ class MyWindow(QMainWindow):
 
         self.sbx_infected.move(19, 185)
         self.sbx_infected.setMinimum(1)
-        self.sbx_infected.setMaximum(99999)
+        self.sbx_infected.setMaximum(self.sbx_healthy.value())
         self.sbx_infected.setValue(100)
         self.sbx_infected.setSingleStep(100)
 
@@ -131,7 +131,7 @@ class MyWindow(QMainWindow):
 
         self.sbx_days.move(19, 233)
         self.sbx_days.setMinimum(10)
-        self.sbx_days.setMaximum(365)
+        self.sbx_days.setMaximum(1000)
         self.sbx_days.setValue(200)
         self.sbx_days.setSingleStep(5)
 
@@ -240,7 +240,7 @@ class MyWindow(QMainWindow):
             elif self.cbx_Virus_Model.currentIndex() == 4:
                     print("S.I.S")
         except  ValueError:
-            print("Error...")
+            print(ValueError)
 
 
 

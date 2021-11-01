@@ -11,9 +11,9 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
     D0 = sbx_days.value()
 
     # Contact rate
-    beta = sbx_propagation.value() / 100
+    beta = int(sbx_propagation.value()) / 100
     # recovery rate
-    gamma = sbx_r_chance.value() / 100
+    gamma = int(sbx_r_chance.value()) / 100
 
     # recovered individuals
     R0 = 0
