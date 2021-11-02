@@ -2,16 +2,21 @@ import sys
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PyQt5.QtGui import QPixmap
-from models import SIR, SIRD
 
+from models import SIR, SIRD
 
 class MyWindow(QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
+
         # ----------------------------------Initialize----------------------------------#
-        #Run Button
-        self.completed = 0
+
+        #Run sim Button
         self.btn_simulate = QtWidgets.QPushButton(self)
+
+        # Save sim Button
+        #self.btn_Save = QtWidgets.QPushButton(self)
+
         #Param Reset button
         self.btn_reset = QtWidgets.QPushButton(self)
 
@@ -23,7 +28,7 @@ class MyWindow(QMainWindow):
         self.inp_name = QtWidgets.QLineEdit(self)
         self.lbl_name = QtWidgets.QLabel(self)
 
-        # Headers
+        # Header
         self.lbl_Param_Header = QtWidgets.QLabel(self)
         self.lbl_virus_Header = QtWidgets.QLabel(self)
         self.lbl_simulation_Header = QtWidgets.QLabel(self)
@@ -61,8 +66,11 @@ class MyWindow(QMainWindow):
         self.cbx_Virus_Model = QtWidgets.QComboBox(self)
 
         # Header Img
-        self.Head_img = QPixmap('assets/img/Header.png')
+        self.Head_img = QPixmap('Header.png')
         self.header = QtWidgets.QLabel(self)
+
+        #Fig
+        self.figure = QtWidgets.QLabel(self)
 
         #Me
         self.lbl_MattCaine = QtWidgets.QLabel(self)
@@ -71,14 +79,17 @@ class MyWindow(QMainWindow):
         self.setFixedSize(1700, 900)
         self.setWindowTitle("Comp3000 - Computer Virus Spread Simulation")
         self.icon = QtGui.QIcon()
-        self.icon.addPixmap(QtGui.QPixmap('assets/img/Header.png'), QtGui.QIcon.Selected, QtGui.QIcon.On)
+        self.icon.addPixmap(QtGui.QPixmap('Header.png'), QtGui.QIcon.Selected, QtGui.QIcon.On)
         self.setWindowIcon(self.icon)
 
         self.initUI()
 
+        self.simulate()
+
     def initUI(self):
 
         #----------------------------------Form----------------------------------#
+
 
         self.header.setPixmap(self.Head_img)
         self.header.resize(1920, 50)
@@ -86,7 +97,7 @@ class MyWindow(QMainWindow):
         self.lbl_MattCaine.setText("© Matt Caine - UoP - Comp3000 Project")
         self.lbl_MattCaine.setGeometry(1490, 875, 300, 20)
 
-
+        #self.btn_Save.setDisabled(True)
         self.sbx_hibernation.setDisabled(True)
         self.sbx_mortality.setDisabled(True)
 
@@ -114,8 +125,8 @@ class MyWindow(QMainWindow):
 
         self.cbx_Virus_Model.currentTextChanged.connect(self.on_model_combobox_changed)
 
-        #--------Healthy--------#
-        self.lbl_healthy.setText("Population")
+        #--------Susceptible--------#
+        self.lbl_healthy.setText("Starting Susceptible")
         self.lbl_healthy.move(20, 113)
 
         self.sbx_healthy.move(19, 137)
@@ -130,7 +141,7 @@ class MyWindow(QMainWindow):
 
         self.sbx_infected.move(19, 185)
         self.sbx_infected.setMinimum(1)
-        self.sbx_infected.setMaximum(self.sbx_healthy.value())
+        self.sbx_infected.setMaximum(99999)
         self.sbx_infected.setValue(100)
         self.sbx_infected.setSingleStep(100)
 
@@ -141,7 +152,7 @@ class MyWindow(QMainWindow):
         self.sbx_days.move(19, 233)
         self.sbx_days.setMinimum(10)
         self.sbx_days.setMaximum(1000)
-        self.sbx_days.setValue(200)
+        self.sbx_days.setValue(365)
         self.sbx_days.setSingleStep(5)
 
         # --------Pick a Virus--------#
@@ -165,7 +176,7 @@ class MyWindow(QMainWindow):
         self.sbx_propagation.move(19, 347)
         self.sbx_propagation.setMinimum(1)
         self.sbx_propagation.setMaximum(100)
-        self.sbx_propagation.setValue(20)
+        self.sbx_propagation.setValue(5)
         self.sbx_propagation.setSingleStep(5)
 
         # --------hibernation--------#
@@ -185,7 +196,7 @@ class MyWindow(QMainWindow):
         self.sbx_r_chance.move(19, 443)
         self.sbx_r_chance.setMinimum(1)
         self.sbx_r_chance.setMaximum(100)
-        self.sbx_r_chance.setValue(10)
+        self.sbx_r_chance.setValue(1)
         self.sbx_r_chance.setSingleStep(5)
 
 
@@ -200,17 +211,23 @@ class MyWindow(QMainWindow):
         self.sbx_mortality.setSingleStep(5)
 
         #--------Reset Button--------#
-        self.btn_reset.setText("Reset")
-        self.btn_reset.move(19, 650)
+        self.btn_reset.setText("🗑️ Reset")
+        self.btn_reset.move(19, 530)
         self.btn_reset.clicked.connect(self.reset_parameters)
 
 
         # ----------------------------------Simulate----------------------------------#
-        self.btn_simulate.setText("Simulate")
-        self.btn_simulate.move(19, 690)
+        self.btn_simulate.setText("📈 Simulate")
+        self.btn_simulate.move(19, 841)
 
         self.btn_simulate.clicked.connect(self.simulate)
 
+        # ----------------------------------Simulate----------------------------------#
+
+        #self.btn_Save.setText("💾 Save Firgure")
+        #self.btn_Save.move(19, 805)
+
+        #self.btn_Save.clicked.connect(self.Click_test)
 
 
     # ----------------------------------Functions----------------------------------#
@@ -219,12 +236,13 @@ class MyWindow(QMainWindow):
     def Click_test():
         print("Button Clicked")
 
+
+    # --------model locks--------#
     def on_model_combobox_changed(self, value):
         if "E" in value:
             self.sbx_hibernation.setDisabled(False)
         if "D" in value:
             self.sbx_mortality.setDisabled(False)
-
         else:
             self.sbx_hibernation.setDisabled(True)
             self.sbx_mortality.setDisabled(True)
@@ -237,24 +255,38 @@ class MyWindow(QMainWindow):
             self.cbx_Virus_Model.setCurrentIndex(0)
             self.sbx_healthy.setValue(25000)
             self.sbx_infected.setValue(100)
-            self.sbx_days.setValue(200)
-            self.sbx_propagation.setValue(20)
+            self.sbx_days.setValue(365)
+            self.sbx_propagation.setValue(5)
             self.sbx_hibernation.setValue(1)
-            self.sbx_r_chance.setValue(10)
+            self.sbx_r_chance.setValue(1)
             self.cbx_viruses.setCurrentIndex(0)
             self.sbx_mortality.setValue(1)
 
     # -----------------------------------------------------MODELS-----------------------------------------------------#
 
-
     def simulate(self):
         try:
             if self.cbx_Virus_Model.currentIndex() == 0:
                 SIR(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance)
-                print("S.I.R")
+
+                #show results
+                self.Fig_img = QPixmap('fig_temp.png')
+                self.figure.setPixmap(self.Fig_img)
+                self.figure.resize(self.Fig_img.width(), self.Fig_img.height())
+                self.figure.move(145, 80)
+
+                #self.btn_Save.setDisabled(False)
+
             elif self.cbx_Virus_Model.currentIndex() == 1:
                 SIRD(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.sbx_mortality)
-                print("S.I.R/D")
+
+                #show results
+                self.Fig_img = QPixmap('fig_temp.png')
+                self.figure.setPixmap(self.Fig_img)
+                self.figure.resize(self.Fig_img.width(), self.Fig_img.height())
+                self.figure.move(145, 80)
+
+                #self.btn_Save.setDisabled(False)
 
             elif self.cbx_Virus_Model.currentIndex() == 2:
                     print("S.E.I.R")
@@ -264,8 +296,7 @@ class MyWindow(QMainWindow):
 
             elif self.cbx_Virus_Model.currentIndex() == 4:
                     print("S.I.S")
-        except  ValueError:
-            print(ValueError)
+        except Exception as e: print(e)
 
 
 
