@@ -2,7 +2,7 @@ import sys
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PyQt5.QtGui import QPixmap
-from models import SIR
+from models import SIR, SIRD
 
 
 class MyWindow(QMainWindow):
@@ -31,9 +31,15 @@ class MyWindow(QMainWindow):
         # propagation_chance group
         self.sbx_propagation = QtWidgets.QSpinBox(self)
         self.lbl_propagation = QtWidgets.QLabel(self)
+
+        # mortality group
+        self.sbx_mortality = QtWidgets.QSpinBox(self)
+        self.lbl_mortality = QtWidgets.QLabel(self)
+
         # hibernation_Days group
         self.sbx_hibernation = QtWidgets.QSpinBox(self)
         self.lbl_hibernation = QtWidgets.QLabel(self)
+
         # r_chance group
         self.sbx_r_chance = QtWidgets.QSpinBox(self)
         self.lbl_r_chance = QtWidgets.QLabel(self)
@@ -41,9 +47,11 @@ class MyWindow(QMainWindow):
         # Iterations group
         self.sbx_days = QtWidgets.QSpinBox(self)
         self.lbl_days = QtWidgets.QLabel(self)
+
         # Infected group
         self.sbx_infected = QtWidgets.QSpinBox(self)
         self.lbl_infected = QtWidgets.QLabel(self)
+
         # Healthy group
         self.sbx_healthy = QtWidgets.QSpinBox(self)
         self.lbl_healthy = QtWidgets.QLabel(self)
@@ -80,6 +88,7 @@ class MyWindow(QMainWindow):
 
 
         self.sbx_hibernation.setDisabled(True)
+        self.sbx_mortality.setDisabled(True)
 
         # ----------------------------------Titles----------------------------------#
 
@@ -100,13 +109,13 @@ class MyWindow(QMainWindow):
         self.lbl_Virus_Model.move(20, 65)
 
         self.cbx_Virus_Model.addItem("✅ S.I.R")
-        self.cbx_Virus_Model.addItems(["❌ S.I.R/D", "❌ S.E.I.R", "❌ S.E.I.R/D", "❌ S.I.S"])
+        self.cbx_Virus_Model.addItems(["✅ S.I.R/D", "❌ S.E.I.R", "❌ S.E.I.R/D", "❌ S.I.S"])
         self.cbx_Virus_Model.setGeometry(19, 90, 100, 25)
 
         self.cbx_Virus_Model.currentTextChanged.connect(self.on_model_combobox_changed)
 
         #--------Healthy--------#
-        self.lbl_healthy.setText("Healthy")
+        self.lbl_healthy.setText("Population")
         self.lbl_healthy.move(20, 113)
 
         self.sbx_healthy.move(19, 137)
@@ -116,7 +125,7 @@ class MyWindow(QMainWindow):
         self.sbx_healthy.setSingleStep(100)
 
         #--------Infected--------#
-        self.lbl_infected.setText("Infected")
+        self.lbl_infected.setText("Starting Infected")
         self.lbl_infected.move(20, 161)
 
         self.sbx_infected.move(19, 185)
@@ -180,6 +189,16 @@ class MyWindow(QMainWindow):
         self.sbx_r_chance.setSingleStep(5)
 
 
+        # --------Mortality--------#
+        self.lbl_mortality.setText("Mortality Rate %")
+        self.lbl_mortality.move(20, 467)
+
+        self.sbx_mortality.move(19, 491)
+        self.sbx_mortality.setMinimum(1)
+        self.sbx_mortality.setMaximum(100)
+        self.sbx_mortality.setValue(1)
+        self.sbx_mortality.setSingleStep(5)
+
         #--------Reset Button--------#
         self.btn_reset.setText("Reset")
         self.btn_reset.move(19, 650)
@@ -203,8 +222,12 @@ class MyWindow(QMainWindow):
     def on_model_combobox_changed(self, value):
         if "E" in value:
             self.sbx_hibernation.setDisabled(False)
+        if "D" in value:
+            self.sbx_mortality.setDisabled(False)
+
         else:
             self.sbx_hibernation.setDisabled(True)
+            self.sbx_mortality.setDisabled(True)
 
     # --------Parameter Reset Button--------#
     def reset_parameters(self):
@@ -219,6 +242,7 @@ class MyWindow(QMainWindow):
             self.sbx_hibernation.setValue(1)
             self.sbx_r_chance.setValue(10)
             self.cbx_viruses.setCurrentIndex(0)
+            self.sbx_mortality.setValue(1)
 
     # -----------------------------------------------------MODELS-----------------------------------------------------#
 
@@ -227,9 +251,10 @@ class MyWindow(QMainWindow):
         try:
             if self.cbx_Virus_Model.currentIndex() == 0:
                 SIR(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance)
-
+                print("S.I.R")
             elif self.cbx_Virus_Model.currentIndex() == 1:
-                    print("S.I.R/D")
+                SIRD(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.sbx_mortality)
+                print("S.I.R/D")
 
             elif self.cbx_Virus_Model.currentIndex() == 2:
                     print("S.E.I.R")
