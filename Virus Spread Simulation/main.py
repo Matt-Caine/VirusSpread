@@ -1,7 +1,9 @@
 import sys
+import time
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PyQt5.QtGui import QPixmap
+
 
 from models import SIR, SIRD
 
@@ -15,7 +17,15 @@ class MyWindow(QMainWindow):
         self.btn_simulate = QtWidgets.QPushButton(self)
 
         # Save sim Button
-        #self.btn_Save = QtWidgets.QPushButton(self)
+        self.btn_Save = QtWidgets.QPushButton(self)
+
+        self.Save_msg = QMessageBox()
+        self.Save_msg.setWindowTitle("Virus Spread")
+        self.Save_msg.setText("Your figure has been saved to /Saved/")
+
+        #progress
+        self.progress = QtWidgets.QProgressBar(self)
+
 
         #Param Reset button
         self.btn_reset = QtWidgets.QPushButton(self)
@@ -97,7 +107,7 @@ class MyWindow(QMainWindow):
         self.lbl_MattCaine.setText("© Matt Caine - UoP - Comp3000 Project")
         self.lbl_MattCaine.setGeometry(1490, 875, 300, 20)
 
-        #self.btn_Save.setDisabled(True)
+        self.btn_Save.setDisabled(True)
         self.sbx_hibernation.setDisabled(True)
         self.sbx_mortality.setDisabled(True)
 
@@ -120,7 +130,7 @@ class MyWindow(QMainWindow):
         self.lbl_Virus_Model.move(20, 65)
 
         self.cbx_Virus_Model.addItem("✅ S.I.R")
-        self.cbx_Virus_Model.addItems(["✅ S.I.R/D", "❌ S.E.I.R", "❌ S.E.I.R/D", "❌ S.I.S"])
+        self.cbx_Virus_Model.addItems(["✅ S.I.R/D", "❌ S.E.I.R", "❌ S.I.S"])
         self.cbx_Virus_Model.setGeometry(19, 90, 100, 25)
 
         self.cbx_Virus_Model.currentTextChanged.connect(self.on_model_combobox_changed)
@@ -196,7 +206,7 @@ class MyWindow(QMainWindow):
         self.sbx_r_chance.move(19, 443)
         self.sbx_r_chance.setMinimum(1)
         self.sbx_r_chance.setMaximum(100)
-        self.sbx_r_chance.setValue(1)
+        self.sbx_r_chance.setValue(10)
         self.sbx_r_chance.setSingleStep(5)
 
 
@@ -207,7 +217,7 @@ class MyWindow(QMainWindow):
         self.sbx_mortality.move(19, 491)
         self.sbx_mortality.setMinimum(1)
         self.sbx_mortality.setMaximum(100)
-        self.sbx_mortality.setValue(1)
+        self.sbx_mortality.setValue(5)
         self.sbx_mortality.setSingleStep(5)
 
         #--------Reset Button--------#
@@ -224,10 +234,10 @@ class MyWindow(QMainWindow):
 
         # ----------------------------------Simulate----------------------------------#
 
-        #self.btn_Save.setText("💾 Save Firgure")
-        #self.btn_Save.move(19, 805)
+        self.btn_Save.setText("💾 Save Figure")
+        self.btn_Save.move(19, 805)
 
-        #self.btn_Save.clicked.connect(self.Click_test)
+        self.btn_Save.clicked.connect(self.Save)
 
 
     # ----------------------------------Functions----------------------------------#
@@ -236,12 +246,25 @@ class MyWindow(QMainWindow):
     def Click_test():
         print("Button Clicked")
 
+    # --------Save--------#
+
+
+    def Save(self):
+        self.img = QPixmap('fig_temp.png')
+
+        self.img.save('Saved/{stamp}.png'.format(stamp = time.strftime("%Y%m%d-%H%M%S")))
+        self.Save_msg.exec_()  # this will show our messagebox
+
+
+
 
     # --------model locks--------#
     def on_model_combobox_changed(self, value):
         if "E" in value:
             self.sbx_hibernation.setDisabled(False)
-        if "D" in value:
+            self.sbx_mortality.setDisabled(True)
+        elif "D" in value:
+            self.sbx_hibernation.setDisabled(True)
             self.sbx_mortality.setDisabled(False)
         else:
             self.sbx_hibernation.setDisabled(True)
@@ -258,9 +281,10 @@ class MyWindow(QMainWindow):
             self.sbx_days.setValue(365)
             self.sbx_propagation.setValue(5)
             self.sbx_hibernation.setValue(1)
-            self.sbx_r_chance.setValue(1)
+            self.sbx_r_chance.setValue(10)
             self.cbx_viruses.setCurrentIndex(0)
-            self.sbx_mortality.setValue(1)
+            self.sbx_mortality.setValue(5)
+            self.simulate()
 
     # -----------------------------------------------------MODELS-----------------------------------------------------#
 
@@ -275,7 +299,7 @@ class MyWindow(QMainWindow):
                 self.figure.resize(self.Fig_img.width(), self.Fig_img.height())
                 self.figure.move(145, 80)
 
-                #self.btn_Save.setDisabled(False)
+                self.btn_Save.setDisabled(False)
 
             elif self.cbx_Virus_Model.currentIndex() == 1:
                 SIRD(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.sbx_mortality)
@@ -286,7 +310,7 @@ class MyWindow(QMainWindow):
                 self.figure.resize(self.Fig_img.width(), self.Fig_img.height())
                 self.figure.move(145, 80)
 
-                #self.btn_Save.setDisabled(False)
+                self.btn_Save.setDisabled(False)
 
             elif self.cbx_Virus_Model.currentIndex() == 2:
                     print("S.E.I.R")

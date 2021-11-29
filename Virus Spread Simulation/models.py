@@ -2,6 +2,9 @@ import numpy as np
 from scipy.integrate import odeint
 from matplotlib import pyplot as plt
 
+#Style sheet
+plt.style.use('ggplot')
+
 def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
     #Starting Susceptible
     N0 = sbx_healthy.value()
@@ -12,10 +15,12 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
 
     # Days to run
     D0 = sbx_days.value()
+
     # Contact rate
     beta = int(sbx_propagation.value()) / 100
+
     # recovery rate
-    gamma = int(sbx_r_chance.value()) / 100
+    gamma = int(sbx_r_chance.value()) / 1000
 
     # recovered individuals
     R0 = 0
@@ -27,6 +32,7 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
     # The SIR model differential equations
     def deriv(y, t, N0, beta, gamma):
         S, I, R = y
+
         dSdt = -beta * S * I / N0
         dIdt = beta * S * I / N0 - gamma * I
         dRdt = gamma * I
@@ -43,31 +49,32 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
     # Plot the data
     fig, axs = plt.subplots(2, 2,figsize=(15.3, 7.9))
     # TOP LEFT plot---------------------------------------------------------
-    axs[0, 0].set_title("Timeline",fontweight="bold")
+    axs[0, 0].set_title("Timeline Overview",fontweight="bold")
     try:
         plt.setp(axs[0, 0], xlabel="Time (Days)")
-        plt.setp(axs[0, 0], ylabel="Population (Devices)")
+        plt.setp(axs[0, 0], ylabel="Total Devices")
         axs[0, 0].grid()
 
-        axs[0, 0].plot(t, S, label='Susceptible', color='tab:blue')
+        axs[0, 0].plot(t, S, label='Unaffected Devices', color='tab:blue')
         axs[0, 0].plot(t, I, linestyle='--', label='Infected', color='tab:orange')
-        axs[0, 0].plot(t, R, label='Recovered & protected', color='tab:green')
+        axs[0, 0].plot(t, R, label='Recovered & Protected', color='tab:green')
+
 
         legend = axs[0, 0].legend()
         legend.get_frame().set_alpha(0.5)
         for spine in ('top', 'right', 'bottom', 'left'):
             axs[0, 0].spines[spine].set_visible(False)
 
-        axs[0, 0].legend(['Susceptible', 'Infected', 'Recovered'], loc='best',
+        axs[0, 0].legend(['Unaffected', 'Infected', 'Recovered and Protected'], loc='best',
                          ncol=1, fancybox=True)
     except Exception as e:
         print(e)
 
     # TOP Right plot---------------------------------------------------------
-    axs[0, 1].set_title("Final Stats on day {}".format(D0),fontweight="bold")
+    axs[0, 1].set_title("Distribution on day {}".format(D0),fontweight="bold")
     try:
 
-        labels = 'Susceptible', 'Infected', 'Recovered'
+        labels = 'Unaffected', 'Infected', 'Recovered and Protected'
 
         colors = ['tab:blue', 'tab:orange', 'tab:green']
 
@@ -76,7 +83,7 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
 
         labels = [f'{l} | {s:0.1f}%' for l, s in zip(labels, sizes)]
 
-        axs[0, 1].pie(sizes, wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': 'white'},
+        axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': 'white'},
                       pctdistance=0.8, labeldistance=1.07, startangle=90, colors=colors)
 
         axs[0, 1].legend(labels, loc="best")
@@ -89,9 +96,31 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
 
     axs[1, 1].set_title("TBD",fontweight="bold")
 
-    # Bottom Left plot----------------------------------------------------------
 
-    axs[1, 0].set_title("TBD", fontweight="bold")
+
+    # Bottom Left plot----------------------------------------------------------
+    try:
+        axs[1, 0].set_title("Infected over {} Days".format(D0), fontweight="bold")
+        axs[1, 0].grid()
+
+        plt.setp(axs[1, 0], xlabel="Time (Days)")
+        plt.setp(axs[1, 0], ylabel="Total Infected Devices")
+
+        axs[1, 0].plot(t, I, color='black',linestyle='--')
+        axs[1, 0].bar(t, I,width=1, label='Infected', color='tab:orange')
+
+
+        for spine in ('top', 'right', 'bottom', 'left'):
+            axs[1, 0].spines[spine].set_visible(False)
+
+
+    except Exception as e:
+        print(e)
+
+
+
+
+
 
     # --------------------------------------------------------------------------------------------------------------------
 
@@ -99,8 +128,8 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
     plt.tight_layout()
     plt.savefig("fig_temp.png",transparent=True)
 
-
 def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_mortality):
+
     #Starting Susceptible
     N0 = sbx_healthy.value()
     # Initial number of infected
@@ -114,11 +143,11 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
     # Contact rate
     beta = int(sbx_propagation.value()) / 100
     # recovery rate
-    gamma = int(sbx_r_chance.value()) / 100
+    gamma = int(sbx_r_chance.value()) / 1000
 
     #mortality
-    mu = int(sbx_mortality.value()) / 100
-    #mu = 1 / 100
+    mu = int(sbx_mortality.value()) / 1000
+
 
 
     # start recovered individuals
@@ -138,6 +167,7 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
         dDdt = mu * I
         return dSdt, dIdt, dRdt, dDdt
 
+
     # Initial conditions vector
     y0 = S0, I0, R0, Dd0
     # Integrate the SIRD equations over the time grid, t.
@@ -153,38 +183,38 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
 
 
     # TOP LEFT plot---------------------------------------------------------
-    axs[0, 0].set_title("Timeline", fontweight="bold")
+    axs[0, 0].set_title("Timeline Overview",fontweight="bold")
     try:
         plt.setp(axs[0, 0], xlabel="Time (Days)")
-        plt.setp(axs[0, 0], ylabel="Population (Devices)")
+        plt.setp(axs[0, 0], ylabel="Total Devices")
         axs[0, 0].grid()
 
-        axs[0, 0].plot(t, S, label='Susceptible', color='tab:blue')
+        axs[0, 0].plot(t, S, label='Unaffected', color='tab:blue')
         axs[0, 0].plot(t, I, linestyle='--', label='Infected', color='tab:orange')
         axs[0, 0].plot(t, R, label='Recovered & protected', color='tab:green')
-        axs[0, 0].plot(t, D, label='Dead', color='crimson')
+        axs[0, 0].plot(t, D, label='Irrecoverable', color='crimson')
 
         legend = axs[0, 0].legend()
         legend.get_frame().set_alpha(0.5)
         for spine in ('top', 'right', 'bottom', 'left'):
             axs[0, 0].spines[spine].set_visible(False)
 
-        axs[0, 0].legend(['Susceptible', 'Infected', 'Recovered','Dead'], loc='best',
+        axs[0, 0].legend(['Unaffected', 'Infected', 'Recovered and Protected','Irrecoverable'], loc='best',
                          ncol=1, fancybox=True)
     except Exception as e:
         print(e)
 
     # TOP Right plot---------------------------------------------------------
-    axs[0, 1].set_title("Final Stats on day {}".format(D0), fontweight="bold")
+    axs[0, 1].set_title("Distribution on day {}".format(D0), fontweight="bold")
     try:
-        labels = 'Susceptible', 'Infected', 'Recovered', 'Dead'
+        labels = 'Unaffected', 'Infected', 'Recovered and Protected', 'Irrecoverable'
         colors = ['tab:blue', 'tab:orange', 'tab:green','crimson']
 
         sizes = [S[-1] / P0 * 100, I[-1] / P0 * 100, R[-1] / P0 * 100, D[-1]/N0*100]
 
         labels = [f'{l} | {s:0.1f}%' for l, s in zip(labels, sizes)]
 
-        axs[0, 1].pie(sizes, wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': 'white'},
+        axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': 'white'},
                       pctdistance=0.8, labeldistance=1.07, startangle=90, colors=colors)
 
         axs[0, 1].legend(labels, loc="best")
@@ -199,7 +229,24 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
 
     # Bottom Left plot----------------------------------------------------------
 
-    axs[1, 0].set_title("TBD", fontweight="bold")
+    try:
+        axs[1, 0].set_title("Infected over {} Days".format(D0), fontweight="bold")
+        axs[1, 0].grid()
+
+        plt.setp(axs[1, 0], xlabel="Time (Days)")
+        plt.setp(axs[1, 0], ylabel="Total Infected Devices")
+
+        axs[1, 0].plot(t, I, color='black',linestyle='--')
+        axs[1, 0].bar(t, I,width=1.0, label='Infected', color='tab:orange')
+
+
+        for spine in ('top', 'right', 'bottom', 'left'):
+            axs[1, 0].spines[spine].set_visible(False)
+
+
+    except Exception as e:
+        print(e)
+
 
     # --------------------------------------------------------------------------------------------------------------------
     plt.tight_layout()
