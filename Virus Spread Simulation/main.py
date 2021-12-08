@@ -1,15 +1,38 @@
 import sys
 import time
+import os
 from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QSplashScreen, QGridLayout, QWidget, QDesktopWidget
 from PyQt5.QtGui import QPixmap
 
 
 from models import SIR, SIRD
 
+class Splash(QSplashScreen):
+    def __init__(self):
+        super(Splash, self).__init__()
+
+        qtRectangle = self.frameGeometry()
+        centerPoint = QDesktopWidget().availableGeometry().center()
+        qtRectangle.moveCenter(centerPoint)
+        self.move(qtRectangle.topLeft())
+
+        label = QtWidgets.QLabel(self)
+        pixmap = QPixmap('Splash.png')
+        label.setPixmap(pixmap)
+        self.resize(pixmap.width(), pixmap.height())
+
+        qtRectangle = self.frameGeometry()
+        centerPoint = QDesktopWidget().availableGeometry().center()
+
+        qtRectangle.moveCenter(centerPoint)
+        self.move(qtRectangle.topLeft())
+
+
 class MyWindow(QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
+
 
         # ----------------------------------Initialize----------------------------------#
 
@@ -87,7 +110,7 @@ class MyWindow(QMainWindow):
 
         # Window frame settings
         self.setFixedSize(1700, 900)
-        self.setWindowTitle("Comp3000 - Computer Virus Spread Simulation")
+        self.setWindowTitle("Comp3000 - Computer Virus Spread Visualization")
         self.icon = QtGui.QIcon()
         self.icon.addPixmap(QtGui.QPixmap('Header.png'), QtGui.QIcon.Selected, QtGui.QIcon.On)
         self.setWindowIcon(self.icon)
@@ -161,22 +184,22 @@ class MyWindow(QMainWindow):
 
         self.sbx_days.move(19, 233)
         self.sbx_days.setMinimum(10)
-        self.sbx_days.setMaximum(1000)
+        self.sbx_days.setMaximum(10000)
         self.sbx_days.setValue(365)
         self.sbx_days.setSingleStep(5)
 
         # --------Pick a Virus--------#
 
-        self.lbl_viruses.setText("Use existing virus")
-        self.lbl_viruses.move(20, 275)
+        #self.lbl_viruses.setText("Use existing virus")
+        #self.lbl_viruses.move(20, 275)
 
-        self.cbx_viruses.addItem("❌ Use Custom")
-        self.cbx_viruses.addItems(["WannaCry", "ILOVEYOU", "CryptoLocker", "Sasser","*COVID-19"])
-        self.cbx_viruses.setGeometry(19, 299, 100, 25)
+        #self.cbx_viruses.addItem("❌ Use Custom")
+        #self.cbx_viruses.addItems(["WannaCry", "ILOVEYOU", "CryptoLocker", "Sasser","*COVID-19"])
+        #self.cbx_viruses.setGeometry(19, 299, 100, 25)
 
         #self.cbx_viruses.currentTextChanged.connect(self.on_combobox_changed)
 
-        self.cbx_viruses.setDisabled(True)
+        #self.cbx_viruses.setDisabled(True)
 
 
         # --------propagation--------#
@@ -327,7 +350,11 @@ class MyWindow(QMainWindow):
 # ----------------------------------Window----------------------------------#
 def window():
     app = QApplication(sys.argv)
+    splash = Splash()
     win = MyWindow()
+    splash.show()
+    time.sleep(3)
+    splash.hide()
     win.show()
     sys.exit(app.exec_())
 

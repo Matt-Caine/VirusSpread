@@ -117,11 +117,6 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
     except Exception as e:
         print(e)
 
-
-
-
-
-
     # --------------------------------------------------------------------------------------------------------------------
 
     #plt.subplots_adjust(left=0.06, bottom=0.055, right=0.98, top=0.97, wspace=0.2, hspace=0.2)
@@ -163,8 +158,10 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
         S, I, R, D = y
         dSdt = -beta * S * I / N0
         dIdt = beta * S * I / N0 - gamma * I - mu * I
+
         dRdt = gamma * I
         dDdt = mu * I
+
         return dSdt, dIdt, dRdt, dDdt
 
 
