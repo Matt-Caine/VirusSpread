@@ -26,6 +26,7 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
     R0 = 0
     # work out susceptible
     S0 = N0 - I0 - R0
+
     # A grid of time points (in days)
     t = np.linspace(0, D0, D0)
 
@@ -40,6 +41,7 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
 
     # Initial conditions vector
     y0 = S0, I0, R0
+
     # Integrate the SIR equations over the time grid, t.
     ret = odeint(deriv, y0, t, args=(N0, beta, gamma))
     S, I, R = ret.T
@@ -51,6 +53,7 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
     # TOP LEFT plot---------------------------------------------------------
     axs[0, 0].set_title("Timeline Overview",fontweight="bold")
     try:
+        print("axs[0, 0] Loaded")
         plt.setp(axs[0, 0], xlabel="Time (Days)")
         plt.setp(axs[0, 0], ylabel="Total Devices")
         axs[0, 0].grid()
@@ -73,6 +76,7 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
     # TOP Right plot---------------------------------------------------------
     axs[0, 1].set_title("Distribution on day {}".format(D0),fontweight="bold")
     try:
+        print("axs[0, 1] Loaded")
 
         labels = 'Unaffected', 'Infected', 'Recovered and Protected'
 
@@ -95,11 +99,18 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
     # Bottom Right plot---------------------------------------------------------
 
     axs[1, 1].set_title("TBD",fontweight="bold")
+    try:
+        print("axs[1, 1] Loaded")
+
+
+    except Exception as e:
+        print(e)
 
 
 
     # Bottom Left plot----------------------------------------------------------
     try:
+        print("axs[1, 0] Loaded")
         axs[1, 0].set_title("Infected over {} Days".format(D0), fontweight="bold")
         axs[1, 0].grid()
 
@@ -182,6 +193,7 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
     # TOP LEFT plot---------------------------------------------------------
     axs[0, 0].set_title("Timeline Overview",fontweight="bold")
     try:
+        print("axs[0, 0] Loaded")
         plt.setp(axs[0, 0], xlabel="Time (Days)")
         plt.setp(axs[0, 0], ylabel="Total Devices")
         axs[0, 0].grid()
@@ -204,6 +216,7 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
     # TOP Right plot---------------------------------------------------------
     axs[0, 1].set_title("Distribution on day {}".format(D0), fontweight="bold")
     try:
+        print("axs[0, 1] Loaded")
         labels = 'Unaffected', 'Infected', 'Recovered and Protected', 'Irrecoverable'
         colors = ['tab:blue', 'tab:orange', 'tab:green','crimson']
 
@@ -223,10 +236,15 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
     # Bottom Right plot---------------------------------------------------------
 
     axs[1, 1].set_title("TBD", fontweight="bold")
+    try:
+        print("axs[1, 1] Loaded")
+    except Exception as e:
+        print(e)
 
     # Bottom Left plot----------------------------------------------------------
 
     try:
+        print("axs[1, 0] Loaded")
         axs[1, 0].set_title("Infected over {} Days".format(D0), fontweight="bold")
         axs[1, 0].grid()
 

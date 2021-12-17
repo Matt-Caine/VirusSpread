@@ -313,6 +313,7 @@ class MyWindow(QMainWindow):
 
     def simulate(self):
         try:
+            print("Starting Sim")
             if self.cbx_Virus_Model.currentIndex() == 0:
                 SIR(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance)
 
@@ -353,8 +354,10 @@ def window():
     splash = Splash()
     win = MyWindow()
     splash.show()
+    print("Spalsh Loaded")
     time.sleep(3)
     splash.hide()
+    print("Main Loaded")
     win.show()
     sys.exit(app.exec_())
 
