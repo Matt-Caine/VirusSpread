@@ -1,13 +1,15 @@
 import numpy as np
 from scipy.integrate import odeint
 from matplotlib import pyplot as plt
+import random
 
 #Style sheet
 plt.style.use('ggplot')
 
-def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
+def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_firewall,chbx_disconnected):
     #Starting Susceptible
     N0 = sbx_healthy.value()
+
     # Initial number of infected
     I0 = sbx_infected.value()
     #Total Population
@@ -16,14 +18,22 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
     # Days to run
     D0 = sbx_days.value()
 
-    # Contact rate
-    beta = int(sbx_propagation.value()) / 100
+    if chbx_firewall.isChecked():
+        # Contact rate
+        beta = int(sbx_propagation.value()) / (random.uniform(200, 210))
+    else:
+        # Contact rate
+        beta = int(sbx_propagation.value()) / 100
+
 
     # recovery rate
     gamma = int(sbx_r_chance.value()) / 1000
 
     # recovered individuals
-    R0 = 0
+    if chbx_disconnected.isChecked():
+        R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.1, 1.8)))
+    else:
+        R0 = 0
     # work out susceptible
     S0 = N0 - I0 - R0
 
@@ -53,7 +63,7 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
     # TOP LEFT plot---------------------------------------------------------
     axs[0, 0].set_title("Timeline Overview",fontweight="bold")
     try:
-        print("axs[0, 0] Loaded")
+
         plt.setp(axs[0, 0], xlabel="Time (Days)")
         plt.setp(axs[0, 0], ylabel="Total Devices")
         axs[0, 0].grid()
@@ -76,8 +86,6 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
     # TOP Right plot---------------------------------------------------------
     axs[0, 1].set_title("Distribution on day {}".format(D0),fontweight="bold")
     try:
-        print("axs[0, 1] Loaded")
-
         labels = 'Unaffected', 'Infected', 'Recovered and Protected'
 
         colors = ['tab:blue', 'tab:orange', 'tab:green']
@@ -98,20 +106,23 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
 
     # Bottom Right plot---------------------------------------------------------
 
-    axs[1, 1].set_title("TBD",fontweight="bold")
+    axs[1, 1].set_title("TBD", fontweight="bold")
     try:
-        print("axs[1, 1] Loaded")
 
+
+
+
+        #axs[1, 1].grid()
+        for spine in ('top', 'right', 'bottom', 'left'):
+            axs[1, 1].spines[spine].set_visible(False)
 
     except Exception as e:
         print(e)
 
 
-
     # Bottom Left plot----------------------------------------------------------
     try:
-        print("axs[1, 0] Loaded")
-        axs[1, 0].set_title("Infected over {} Days".format(D0), fontweight="bold")
+        axs[1, 0].set_title("Infections over {} Days".format(D0), fontweight="bold")
         axs[1, 0].grid()
 
         plt.setp(axs[1, 0], xlabel="Time (Days)")
@@ -134,7 +145,7 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance):
     plt.tight_layout()
     plt.savefig("fig_temp.png",transparent=True)
 
-def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_mortality):
+def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_mortality,chbx_firewall,chbx_disconnected):
 
     #Starting Susceptible
     N0 = sbx_healthy.value()
@@ -146,8 +157,14 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
 
     # Days to run
     D0 = sbx_days.value()
-    # Contact rate
-    beta = int(sbx_propagation.value()) / 100
+
+    if chbx_firewall.isChecked():
+        # Contact rate
+        beta = int(sbx_propagation.value()) / (random.uniform(165, 170))
+    else:
+        # Contact rate
+        beta = int(sbx_propagation.value()) / 100
+
     # recovery rate
     gamma = int(sbx_r_chance.value()) / 1000
 
@@ -157,7 +174,12 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
 
 
     # start recovered individuals
-    R0 = 0
+
+    # recovered individuals
+    if chbx_disconnected.isChecked():
+        R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.1, 1.8)))
+    else:
+        R0 = 0
     # start Dead individuals
     Dd0 = 0
     # work out susceptible
@@ -193,7 +215,7 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
     # TOP LEFT plot---------------------------------------------------------
     axs[0, 0].set_title("Timeline Overview",fontweight="bold")
     try:
-        print("axs[0, 0] Loaded")
+
         plt.setp(axs[0, 0], xlabel="Time (Days)")
         plt.setp(axs[0, 0], ylabel="Total Devices")
         axs[0, 0].grid()
@@ -216,7 +238,7 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
     # TOP Right plot---------------------------------------------------------
     axs[0, 1].set_title("Distribution on day {}".format(D0), fontweight="bold")
     try:
-        print("axs[0, 1] Loaded")
+
         labels = 'Unaffected', 'Infected', 'Recovered and Protected', 'Irrecoverable'
         colors = ['tab:blue', 'tab:orange', 'tab:green','crimson']
 
@@ -237,15 +259,14 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
 
     axs[1, 1].set_title("TBD", fontweight="bold")
     try:
-        print("axs[1, 1] Loaded")
+        print("")
     except Exception as e:
         print(e)
 
     # Bottom Left plot----------------------------------------------------------
 
     try:
-        print("axs[1, 0] Loaded")
-        axs[1, 0].set_title("Infected over {} Days".format(D0), fontweight="bold")
+        axs[1, 0].set_title("Infections over {} Days".format(D0), fontweight="bold")
         axs[1, 0].grid()
 
         plt.setp(axs[1, 0], xlabel="Time (Days)")
@@ -264,5 +285,134 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
 
 
     # --------------------------------------------------------------------------------------------------------------------
+    plt.tight_layout()
+    plt.savefig("fig_temp.png",transparent=True)
+
+def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_firewall,chbx_disconnected):
+    #Starting Susceptible
+    N0 = sbx_healthy.value()
+    # Initial number of infected
+    I0 = sbx_infected.value()
+    #Total Population
+    P0 = I0 + N0
+    # Days to run
+    D0 = sbx_days.value()
+
+    if chbx_firewall.isChecked():
+        # Contact rate
+        beta = int(sbx_propagation.value()) / (random.uniform(190, 200))
+    else:
+        # Contact rate
+        beta = int(sbx_propagation.value()) / 100
+
+    # recovery rate
+    gamma = int(sbx_r_chance.value()) / 1000
+    # recovered individuals
+    # recovered individuals
+    if chbx_disconnected.isChecked():
+        R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.1, 1.8)))
+    else:
+        R0 = 0
+    # work out susceptible
+    S0 = N0 - I0 - R0
+    # A grid of time points (in days)
+    t = np.linspace(0, D0, D0)
+
+    # The SIR model differential equations
+    def deriv(y, t, N0, beta, gamma):
+        S, I  = y
+
+        dSdt = -beta * S * I / N0 + gamma * I
+
+        dIdt = beta * S * I / N0 - gamma * I
+
+        return dSdt, dIdt
+
+    # Initial conditions vector
+    y0 = S0, I0
+
+    # Integrate the SIR equations over the time grid, t.
+    ret = odeint(deriv, y0, t, args=(N0, beta, gamma))
+    S, I = ret.T
+
+    # ------------------------------------GRAPHS----------------------------#
+
+    # Plot the data
+    fig, axs = plt.subplots(2, 2,figsize=(15.3, 7.9))
+    # TOP LEFT plot---------------------------------------------------------
+    axs[0, 0].set_title("Timeline Overview",fontweight="bold")
+    try:
+        plt.setp(axs[0, 0], xlabel="Time (Days)")
+        plt.setp(axs[0, 0], ylabel="Total Devices")
+        axs[0, 0].grid()
+
+        axs[0, 0].plot(t, S, label='Unaffected Devices', color='tab:blue')
+        axs[0, 0].plot(t, I, linestyle='--', label='Infected', color='tab:orange')
+
+        legend = axs[0, 0].legend()
+        legend.get_frame().set_alpha(0.5)
+        for spine in ('top', 'right', 'bottom', 'left'):
+            axs[0, 0].spines[spine].set_visible(False)
+
+        axs[0, 0].legend(['Unaffected', 'Infected'], loc='best',
+                         ncol=1, fancybox=True)
+    except Exception as e:
+        print(e)
+
+    # TOP Right plot---------------------------------------------------------
+    axs[0, 1].set_title("Distribution on day {}".format(D0),fontweight="bold")
+    try:
+
+        labels = 'Unaffected', 'Infected'
+
+        colors = ['tab:blue', 'tab:orange']
+
+        sizes = [S[-1]/P0*100, I[-1]/P0*100]
+
+
+        labels = [f'{l} | {s:0.1f}%' for l, s in zip(labels, sizes)]
+
+        axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': 'white'},
+                      pctdistance=0.8, labeldistance=1.07, startangle=90, colors=colors)
+
+        axs[0, 1].legend(labels, loc="best")
+
+        axs[0, 1].axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    except Exception as e:
+        print(e)
+
+    # Bottom Right plot---------------------------------------------------------
+
+    axs[1, 1].set_title("TBD",fontweight="bold")
+    try:
+        print()
+
+
+    except Exception as e:
+        print(e)
+
+
+    # Bottom Left plot----------------------------------------------------------
+    try:
+        axs[1, 0].set_title("Infections over {} Days".format(D0), fontweight="bold")
+        axs[1, 0].grid()
+
+        plt.setp(axs[1, 0], xlabel="Time (Days)")
+        plt.setp(axs[1, 0], ylabel="Total Infected Devices")
+
+        axs[1, 0].plot(t, I, color='black',linestyle='--')
+        axs[1, 0].bar(t, I,width=1, label='Infected', color='tab:orange')
+
+
+        for spine in ('top', 'right', 'bottom', 'left'):
+            axs[1, 0].spines[spine].set_visible(False)
+
+
+    except Exception as e:
+        print(e)
+
+    # --------------------------------------------------------------------------------------------------------------------
+
+    #plt.subplots_adjust(left=0.06, bottom=0.055, right=0.98, top=0.97, wspace=0.2, hspace=0.2)
     plt.tight_layout()
     plt.savefig("fig_temp.png",transparent=True)
