@@ -5,8 +5,7 @@ from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QSplashScreen, QGridLayout, QWidget, QDesktopWidget, QCheckBox
 from PyQt5.QtGui import QPixmap
 
-
-from models import SIR, SIRD, SIS
+from models import SIR, SIRD, SIS, SEIR
 
 class Splash(QSplashScreen):
     def __init__(self):
@@ -28,11 +27,9 @@ class Splash(QSplashScreen):
         qtRectangle.moveCenter(centerPoint)
         self.move(qtRectangle.topLeft())
 
-
 class MyWindow(QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
-
 
         # ----------------------------------Initialize----------------------------------#
 
@@ -52,7 +49,6 @@ class MyWindow(QMainWindow):
 
         #progress
         self.progress = QtWidgets.QProgressBar(self)
-
 
         #Param Reset button
         self.btn_reset = QtWidgets.QPushButton(self)
@@ -114,7 +110,7 @@ class MyWindow(QMainWindow):
         self.lbl_MattCaine = QtWidgets.QLabel(self)
 
         #-----------------------------------------------------------------------------------------------Other section
-        self.chbx_firewall = QtWidgets.QCheckBox("Firewalls",self)
+        self.chbx_firewall = QtWidgets.QCheckBox("IDS/IPS",self)
         self.chbx_disconnected = QtWidgets.QCheckBox("Offline Nodes", self)
 
         # Window frame settings
@@ -123,9 +119,7 @@ class MyWindow(QMainWindow):
         self.icon = QtGui.QIcon()
         self.icon.addPixmap(QtGui.QPixmap('Header.png'), QtGui.QIcon.Selected, QtGui.QIcon.On)
         self.setWindowIcon(self.icon)
-
         self.initUI()
-
         self.simulate()
 
     def initUI(self):
@@ -164,6 +158,7 @@ class MyWindow(QMainWindow):
         self.lbl_Virus_Model.setText("Virus Model")
         self.lbl_Virus_Model.move(20, 65)
 
+
         self.cbx_Virus_Model.addItem("✅ S.I.R")
         self.cbx_Virus_Model.addItems(["✅ S.I.R/D", "❌ S.E.I.R", "✅ S.I.S"])
         self.cbx_Virus_Model.setGeometry(19, 90, 100, 25)
@@ -199,20 +194,6 @@ class MyWindow(QMainWindow):
         self.sbx_days.setMaximum(10000)
         self.sbx_days.setValue(365)
         self.sbx_days.setSingleStep(5)
-
-        # --------Pick a Virus--------#
-
-        #self.lbl_viruses.setText("Use existing virus")
-        #self.lbl_viruses.move(20, 275)
-
-        #self.cbx_viruses.addItem("❌ Use Custom")
-        #self.cbx_viruses.addItems(["WannaCry", "ILOVEYOU", "CryptoLocker", "Sasser","*COVID-19"])
-        #self.cbx_viruses.setGeometry(19, 299, 100, 25)
-
-        #self.cbx_viruses.currentTextChanged.connect(self.on_combobox_changed)
-
-        #self.cbx_viruses.setDisabled(True)
-
 
         # --------propagation--------#
         self.lbl_propagation.setText("Propagation Rate %")
@@ -303,8 +284,6 @@ class MyWindow(QMainWindow):
         self.Save_msg.exec_()  # this will show our messagebox
 
 
-
-
     # --------model locks--------#
     def on_model_combobox_changed(self, value):
         if "E" in value:
@@ -322,7 +301,7 @@ class MyWindow(QMainWindow):
         ret = QMessageBox.question(self, 'Parameter Reset', "Are you sure? This will reset all parameters.",
                                    QMessageBox.Yes | QMessageBox.Cancel, QMessageBox.Cancel)
         if ret == QMessageBox.Yes:
-            self.cbx_Virus_Model.setCurrentIndex(0)
+            self.cbx_Virus_Model.setCurrentIndex(1)
             self.sbx_healthy.setValue(25000)
             self.sbx_infected.setValue(100)
             self.sbx_days.setValue(365)
@@ -332,6 +311,8 @@ class MyWindow(QMainWindow):
             self.cbx_viruses.setCurrentIndex(0)
             self.sbx_mortality.setValue(5)
             self.simulate()
+            self.chbx_disconnected.setChecked(False)
+            self.chbx_firewall.setChecked(False)
 
     # -----------------------------------------------------MODELS-----------------------------------------------------#
 
@@ -362,7 +343,16 @@ class MyWindow(QMainWindow):
                 self.btn_Save.setDisabled(False)
 
             elif self.cbx_Virus_Model.currentIndex() == 2:
-                    self.Not_added_msg.exec_()
+                SEIR(self.sbx_healthy, self.sbx_infected, self.sbx_days,self.sbx_hibernation, self.sbx_propagation, self.sbx_r_chance, self.chbx_firewall, self.chbx_disconnected)
+
+                #show results
+                self.Fig_img = QPixmap('fig_temp.png')
+                self.figure.setPixmap(self.Fig_img)
+                self.figure.resize(self.Fig_img.width(), self.Fig_img.height())
+                self.figure.move(145, 80)
+
+                self.btn_Save.setDisabled(False)
+
 
             elif self.cbx_Virus_Model.currentIndex() == 3:
                 SIS(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.chbx_firewall,self.chbx_disconnected)
@@ -376,7 +366,6 @@ class MyWindow(QMainWindow):
                 self.btn_Save.setDisabled(False)
 
         except Exception as e: print(e)
-
 
 
 # ----------------------------------Window----------------------------------#
