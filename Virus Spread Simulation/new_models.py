@@ -2,6 +2,7 @@ import numpy as np
 from scipy.integrate import odeint
 from matplotlib import pyplot as plt
 import random
+from matplotlib.gridspec import GridSpec
 
 #Style sheet
 plt.style.use('ggplot')
@@ -59,62 +60,71 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
     # ------------------------------------GRAPHS----------------------------#
 
-    # Plot the data
-    fig, axs = plt.subplots(2, 2,figsize=(15.3, 7.9))
+    def format_axes(fig):
+        for i, ax in enumerate(fig.axes):
+            ax.text(0.5, 0.5, "ax%d" % (i + 1), va="center", ha="center")
+            ax.tick_params(labelbottom=False, labelleft=False)
 
-    # TOP LEFT plot---------------------------------------------------------
-    axs[0, 0].set_title("Timeline Overview",fontweight="bold")
+    fig = plt.figure(figsize=(15.3, 7.9))
+
+    gs = GridSpec(3, 3, figure=fig)
+    ax1 = fig.add_subplot(gs[0, :])
+    ax2 = fig.add_subplot(gs[1, :-1])
+    ax3 = fig.add_subplot(gs[1:, -1])
+    ax4 = fig.add_subplot(gs[-1, 0])
+    ax5 = fig.add_subplot(gs[-1, -2])
+    format_axes(fig)
+
+    # TOP ---------------------------------------------------------
+    ax1.set_title("Timeline Overview", fontweight="bold")
     try:
 
-        plt.setp(axs[0, 0], xlabel="Time (Days)")
-        plt.setp(axs[0, 0], ylabel="Total Devices")
-        axs[0, 0].grid()
+        plt.setp(ax1, xlabel="Time (Days)")
+        plt.setp(ax1, ylabel="Total Devices")
+        ax1.grid()
 
-        axs[0, 0].plot(t, S, label='Unaffected Devices', color='tab:blue')
-        axs[0, 0].plot(t, I, linestyle='--', label='Infected', color='tab:orange')
-        axs[0, 0].plot(t, R, label='Recovered & Protected', color='tab:green')
+        ax1.plot(t, S, label='Unaffected Devices', color='tab:blue')
+        ax1.plot(t, I, linestyle='--', label='Infected', color='tab:orange')
+        ax1.plot(t, R, label='Recovered & Protected', color='tab:green')
 
-        #np.savetxt("foo.csv", I)
-
-        legend = axs[0, 0].legend()
+        legend = ax1.legend()
         legend.get_frame().set_alpha(0.5)
         for spine in ('top', 'right'):
-            axs[0, 0].spines[spine].set_visible(False)
+            ax1.spines[spine].set_visible(False)
 
-        axs[0, 0].spines['bottom'].set_color('black')
-        axs[0, 0].spines['left'].set_color('black')
+        ax1.spines['bottom'].set_color('black')
+        ax1.spines['left'].set_color('black')
 
-        axs[0, 0].legend(['Unaffected', 'Infected', 'Recovered and Protected'], loc='best',
-                         ncol=1, fancybox=True)
+        ax1.legend(['Unaffected', 'Infected', 'Recovered and Protected'], loc='best',
+                   ncol=1, fancybox=True)
     except Exception as e:
         print(e)
 
-    # TOP Right plot---------------------------------------------------------
-    axs[0, 1].set_title("Distribution on day {}".format(D0), fontweight="bold")
+    # middle ---------------------------------------------------------
+    ax2.set_title("Infections over {} Days".format(365), fontweight="bold")
     try:
+        ax2.grid()
+        plt.setp(ax2, xlabel="Time (Days)")
+        plt.setp(ax2, ylabel="Total Infected Devices")
 
-        labels = 'Unaffected', 'Infected', 'Recovered and Protected'
-        colors = ['tab:blue', 'tab:orange', 'tab:green']
+        ax2.plot(t, I, color='black', linestyle='--')
+        ax2.bar(t, I, width=2, label='Infected', color='tab:orange')
 
-        sizes = [S[-1] / P0 * 100, I[-1] / P0 * 100, R[-1] / P0 * 100]
-        labels = [f'{l} | {s:0.1f}%' for l, s in zip(labels, sizes)]
+        ax2.spines['bottom'].set_color('black')
+        ax2.spines['left'].set_color('black')
 
-        axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': 'white'},
-                      pctdistance=0.8, labeldistance=1.07, startangle=90, colors=colors)
-
-        axs[0, 1].legend(labels, loc="best")
-
-        axs[0, 1].axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
+        for spine in ('top', 'right'):
+            ax2.spines[spine].set_visible(False)
 
     except Exception as e:
         print(e)
+
 
     # Bottom Right plot---------------------------------------------------------
 
-    axs[1, 1].set_title("Change in Infected per day".format(D0), fontweight="bold")
+    ax3.set_title("Change in Infected per day".format(D0), fontweight="bold")
     try:
-        axs[1, 1].grid()
+        ax3.grid()
 
         IDiff = np.diff(I)
 
@@ -122,58 +132,66 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         lower = -1
 
         Iupper = np.ma.masked_where(IDiff < upper, IDiff)
-
-
         Ilower = np.ma.masked_where(IDiff > lower, IDiff)
 
-        axs[1, 1].plot(np.delete(t, 0), Iupper, color='crimson')
+        ax3.plot(np.delete(t, 0), Iupper, color='crimson')
 
-        axs[1, 1].plot(t, 0 * t, linestyle='--',color='silver')
+        ax3.plot(t, 0 * t, linestyle=':', color='silver')
 
-        axs[1, 1].plot(np.delete(t, 0), Ilower, color='tab:green')
+        ax3.plot(np.delete(t, 0), Ilower, color='tab:green')
 
-        axs[1, 1].legend(['Increasing Infected','Zero','Decreasing  Infected'], loc='best',
-                         ncol=1, fancybox=True)
+        ax3.legend(['Increasing Infected', 'Zero', 'Decreasing  Infected'], loc='best',
+                   ncol=1, fancybox=True)
 
+        plt.setp(ax3, xlabel="Time (Days)")
+        plt.setp(ax3, ylabel="Change in Infected")
 
-        plt.setp(axs[1, 1], xlabel="Time (Days)")
-        plt.setp(axs[1, 1], ylabel="Change in Infected")
-
-        axs[1, 1].spines['bottom'].set_color('black')
-        axs[1, 1].spines['left'].set_color('black')
+        ax3.spines['bottom'].set_color('black')
+        ax3.spines['left'].set_color('black')
 
         for spine in ('top', 'right'):
-            axs[1, 1].spines[spine].set_visible(False)
+            ax3.spines[spine].set_visible(False)
 
     except Exception as e:
         print(e)
 
-    # Bottom Left plot----------------------------------------------------------
+    # bottom left ---------------------------------------------------------
+    ax4.set_title("Distribution on day {} (Half-way)".format(365 / 2), fontweight="bold")
     try:
-        axs[1, 0].set_title("Total Infections per Day", fontweight="bold")
-        axs[1, 0].grid()
+        labels = 'Unaffected', 'Infected', 'Recovered and Protected'
 
-        plt.setp(axs[1, 0], xlabel="Time (Days)")
-        plt.setp(axs[1, 0], ylabel="Total Infected Devices")
+        colors = ['tab:blue', 'tab:orange', 'tab:green']
 
+        sizes = [S[-1] / P0 * 100, I[-1] / P0 * 100, R[-1] / P0 * 100]
 
-        axs[1, 0].plot(t, I,linewidth=2.0, color='tab:orange')
+        labels = [f'{l} | {s:0.1f}%' for l, s in zip(labels, sizes)]
 
+        ax4.pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': 'white'},
+                pctdistance=0.8, labeldistance=1.07, startangle=90, colors=colors)
 
-        z = np.polyfit(t, I, 1)
-        p = np.poly1d(z)
-        axs[1, 0].plot(t, p(t), color='black',linestyle='--')
+        ax4.legend(labels, loc="best")
 
+        ax4.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    except Exception as e:
+        print(e)
 
-        axs[1, 0].legend(['Total Infected Devices','Trendline'], loc='best',
-                         ncol=1, fancybox=True)
+    # bottom middle ---------------------------------------------------------
+    ax5.set_title("Distribution on day {}".format(365), fontweight="bold")
+    try:
+        labels = 'Unaffected', 'Infected', 'Recovered and Protected'
 
-        axs[1, 0].spines['bottom'].set_color('black')
-        axs[1, 0].spines['left'].set_color('black')
+        colors = ['tab:blue', 'tab:orange', 'tab:green']
 
-        for spine in ('top', 'right'):
-            axs[1, 0].spines[spine].set_visible(False)
+        sizes = [S[-1] / P0 * 100, I[-1] / P0 * 100, R[-1] / P0 * 100]
 
+        labels = [f'{l} | {s:0.1f}%' for l, s in zip(labels, sizes)]
+
+        ax5.pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': 'white'},
+                pctdistance=0.8, labeldistance=1.07, startangle=90, colors=colors)
+
+        ax5.legend(labels, loc="best")
+
+        ax5.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
     except Exception as e:
         print(e)
 
@@ -307,7 +325,7 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
 
         axs[1, 1].plot(np.delete(t, 0), Iupper, color='crimson')
 
-        axs[1, 1].plot(t, 0 * t, linestyle='--', color='silver')
+        axs[1, 1].plot(t, 0 * t, linestyle=':', color='silver')
 
         axs[1, 1].plot(np.delete(t, 0), Ilower, color='tab:green')
 
@@ -331,29 +349,21 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
     # Bottom Left plot----------------------------------------------------------
 
     try:
-        axs[1, 0].set_title("Total Infections per Day", fontweight="bold")
+        axs[1, 0].set_title("Infections over {} Days".format(D0), fontweight="bold")
         axs[1, 0].grid()
 
         plt.setp(axs[1, 0], xlabel="Time (Days)")
         plt.setp(axs[1, 0], ylabel="Total Infected Devices")
 
-
-        axs[1, 0].plot(t, I,linewidth=2.0, color='tab:orange')
-
-
-        z = np.polyfit(t, I, 1)
-        p = np.poly1d(z)
-        axs[1, 0].plot(t, p(t), color='black',linestyle='--')
-
-
-        axs[1, 0].legend(['Total Infected Devices','Trendline'], loc='best',
-                         ncol=1, fancybox=True)
+        axs[1, 0].plot(t, I, color='black',linestyle='--')
+        axs[1, 0].bar(t, I,width=1.1, label='Infected', color='tab:orange')
 
         axs[1, 0].spines['bottom'].set_color('black')
         axs[1, 0].spines['left'].set_color('black')
 
         for spine in ('top', 'right'):
             axs[1, 0].spines[spine].set_visible(False)
+
 
     except Exception as e:
         print(e)
@@ -474,7 +484,7 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
         axs[1, 1].plot(np.delete(t, 0), Iupper, color='crimson')
 
-        axs[1, 1].plot(t, 0 * t, linestyle='-', color='silver')
+        axs[1, 1].plot(t, 0 * t, linestyle=':', color='silver')
 
         axs[1, 1].plot(np.delete(t, 0), Ilower, color='tab:green')
 
@@ -495,29 +505,21 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
     # Bottom Left plot----------------------------------------------------------
     try:
-        axs[1, 0].set_title("Total Infections per Day", fontweight="bold")
+        axs[1, 0].set_title("Infections over {} Days".format(D0), fontweight="bold")
         axs[1, 0].grid()
 
         plt.setp(axs[1, 0], xlabel="Time (Days)")
         plt.setp(axs[1, 0], ylabel="Total Infected Devices")
 
-
-        axs[1, 0].plot(t, I,linewidth=2.0, color='tab:orange')
-
-
-        z = np.polyfit(t, I, 1)
-        p = np.poly1d(z)
-        axs[1, 0].plot(t, p(t), color='black',linestyle='--')
-
-
-        axs[1, 0].legend(['Total Infected Devices','Trendline'], loc='best',
-                         ncol=1, fancybox=True)
+        axs[1, 0].plot(t, I, color='black',linestyle='--')
+        axs[1, 0].bar(t, I,width=1.1, label='Infected', color='tab:orange')
 
         axs[1, 0].spines['bottom'].set_color('black')
         axs[1, 0].spines['left'].set_color('black')
 
         for spine in ('top', 'right'):
             axs[1, 0].spines[spine].set_visible(False)
+
 
     except Exception as e:
         print(e)
@@ -643,29 +645,19 @@ def SEIR(sbx_healthy, sbx_infected, sbx_days, sbx_hibernation, sbx_propagation, 
 
     # Bottom Left plot----------------------------------------------------------
     try:
-        axs[1, 0].set_title("Total Infections per Day", fontweight="bold")
+        axs[1, 0].set_title("Infections over {} Days".format(D0), fontweight="bold")
         axs[1, 0].grid()
 
         plt.setp(axs[1, 0], xlabel="Time (Days)")
         plt.setp(axs[1, 0], ylabel="Total Infected Devices")
 
-
-        axs[1, 0].plot(t, I,linewidth=2.0, color='tab:orange')
-
-
-        z = np.polyfit(t, I, 1)
-        p = np.poly1d(z)
-        axs[1, 0].plot(t, p(t), color='black',linestyle='--')
+        axs[1, 0].plot(t, I, color='black',linestyle='--')
+        axs[1, 0].bar(t, I,width=1, label='Infected', color='tab:orange')
 
 
-        axs[1, 0].legend(['Total Infected Devices','Trendline'], loc='best',
-                         ncol=1, fancybox=True)
-
-        axs[1, 0].spines['bottom'].set_color('black')
-        axs[1, 0].spines['left'].set_color('black')
-
-        for spine in ('top', 'right'):
+        for spine in ('top', 'right', 'bottom', 'left'):
             axs[1, 0].spines[spine].set_visible(False)
+
 
     except Exception as e:
         print(e)

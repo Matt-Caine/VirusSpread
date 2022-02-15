@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QSplashScree
 from PyQt5.QtGui import QPixmap
 
 from models import SIR, SIRD, SIS, SEIR
+#from new_models import SIR, SIRD, SIS, SEIR
 
 class Splash(QSplashScreen):
     def __init__(self):
@@ -158,9 +159,7 @@ class MyWindow(QMainWindow):
         self.lbl_Virus_Model.setText("Virus Model")
         self.lbl_Virus_Model.move(20, 65)
 
-
-        self.cbx_Virus_Model.addItem("✅ S.I.R")
-        self.cbx_Virus_Model.addItems(["✅ S.I.R/D", "❌ S.E.I.R", "✅ S.I.S"])
+        self.cbx_Virus_Model.addItems(["✅ S.I.R","✅ S.I.R/D", "❌ S.E.I.R", "✅ S.I.S"])
         self.cbx_Virus_Model.setGeometry(19, 90, 100, 25)
 
         self.cbx_Virus_Model.currentTextChanged.connect(self.on_model_combobox_changed)
@@ -186,7 +185,7 @@ class MyWindow(QMainWindow):
         self.sbx_infected.setSingleStep(100)
 
         #--------Iterations--------#
-        self.lbl_days.setText("Days")
+        self.lbl_days.setText("Days to Show")
         self.lbl_days.move(20, 209)
 
         self.sbx_days.move(19, 233)
@@ -253,9 +252,6 @@ class MyWindow(QMainWindow):
         # ----------------------------------Simulate----------------------------------#
         self.btn_simulate.setText("📈 Simulate")
 
-        #button colour
-        #self.btn_simulate.setStyleSheet("background-color : #94C973")
-
         self.btn_simulate.move(19, 841)
 
         self.btn_simulate.clicked.connect(self.simulate)
@@ -276,12 +272,11 @@ class MyWindow(QMainWindow):
 
     # --------Save--------#
 
-
     def Save(self):
         self.img = QPixmap('fig_temp.png')
 
         self.img.save('Saved/{stamp}.png'.format(stamp = time.strftime("%Y%m%d-%H%M%S")))
-        self.Save_msg.exec_()  # this will show our messagebox
+        self.Save_msg.exec_()
 
 
     # --------model locks--------#
@@ -301,7 +296,7 @@ class MyWindow(QMainWindow):
         ret = QMessageBox.question(self, 'Parameter Reset', "Are you sure? This will reset all parameters.",
                                    QMessageBox.Yes | QMessageBox.Cancel, QMessageBox.Cancel)
         if ret == QMessageBox.Yes:
-            self.cbx_Virus_Model.setCurrentIndex(1)
+            self.cbx_Virus_Model.setCurrentIndex(0)
             self.sbx_healthy.setValue(25000)
             self.sbx_infected.setValue(100)
             self.sbx_days.setValue(365)
@@ -318,11 +313,12 @@ class MyWindow(QMainWindow):
 
     def simulate(self):
         try:
-            print("Starting Sim")
 
             if self.cbx_Virus_Model.currentIndex() == 0:
                 SIR(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance, self.chbx_firewall, self.chbx_disconnected)
 
+
+                print("SIR_Simulation()")
                 #show results
                 self.Fig_img = QPixmap('fig_temp.png')
                 self.figure.setPixmap(self.Fig_img)
@@ -334,6 +330,7 @@ class MyWindow(QMainWindow):
             elif self.cbx_Virus_Model.currentIndex() == 1:
                 SIRD(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.sbx_mortality,self.chbx_firewall, self.chbx_disconnected)
 
+                print("SIRD_Simulation()")
                 #show results
                 self.Fig_img = QPixmap('fig_temp.png')
                 self.figure.setPixmap(self.Fig_img)
@@ -345,6 +342,7 @@ class MyWindow(QMainWindow):
             elif self.cbx_Virus_Model.currentIndex() == 2:
                 SEIR(self.sbx_healthy, self.sbx_infected, self.sbx_days,self.sbx_hibernation, self.sbx_propagation, self.sbx_r_chance, self.chbx_firewall, self.chbx_disconnected)
 
+                print("SEIR_Simulation()")
                 #show results
                 self.Fig_img = QPixmap('fig_temp.png')
                 self.figure.setPixmap(self.Fig_img)
@@ -357,6 +355,7 @@ class MyWindow(QMainWindow):
             elif self.cbx_Virus_Model.currentIndex() == 3:
                 SIS(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.chbx_firewall,self.chbx_disconnected)
 
+                print("SIS_Simulation()")
                 # show results
                 self.Fig_img = QPixmap('fig_temp.png')
                 self.figure.setPixmap(self.Fig_img)
@@ -374,10 +373,10 @@ def window():
     splash = Splash()
     win = MyWindow()
     splash.show()
-    print("Spalsh Loaded")
+    print("Spalsh()")
     time.sleep(0.8)
     splash.hide()
-    print("Main Loaded")
+    print("Main_Win_Show()")
     win.show()
     sys.exit(app.exec_())
 
