@@ -5,7 +5,7 @@ import random
 
 #Style sheet
 plt.style.use('ggplot')
-
+plt.rcParams['legend.title_fontsize'] = 'x-small'
 
 def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_firewall,chbx_disconnected):
     #Starting Susceptible
@@ -74,7 +74,9 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         axs[0, 0].plot(t, I, linestyle='--', label='Infected', color='tab:orange')
         axs[0, 0].plot(t, R, label='Recovered & Protected', color='tab:green')
 
-        #np.savetxt("foo.csv", I)
+        axs[0, 0].axvline(I.argmax(axis=0), linestyle=':', color='silver')
+
+        axs[0, 0].text(I.argmax(axis=0) + 5, np.amax(I)+10, 'Peak Infected\nDay: {}'.format(I.argmax(axis=0)), color='silver')
 
         legend = axs[0, 0].legend()
         legend.get_frame().set_alpha(0.5)
@@ -123,13 +125,10 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
         Iupper = np.ma.masked_where(IDiff < upper, IDiff)
 
-
         Ilower = np.ma.masked_where(IDiff > lower, IDiff)
 
         axs[1, 1].plot(np.delete(t, 0), Iupper, color='crimson')
-
-        axs[1, 1].plot(t, 0 * t, linestyle='--',color='silver')
-
+        axs[1, 1].axhline(0, linestyle=':', color='silver')
         axs[1, 1].plot(np.delete(t, 0), Ilower, color='tab:green')
 
         axs[1, 1].legend(['Increasing Infected','Zero','Decreasing  Infected'], loc='best',
@@ -156,20 +155,31 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         plt.setp(axs[1, 0], xlabel="Time (Days)")
         plt.setp(axs[1, 0], ylabel="Total Infected Devices")
 
+        upper = N0/2
+        lower = N0/4
 
-        axs[1, 0].plot(t, I,linewidth=2.0, color='tab:orange')
+        Iupper = np.ma.masked_where(I < upper, I)
+        Ilower = np.ma.masked_where(I > lower, I)
+        Imiddle = np.ma.masked_where((I < lower) | (I > upper), I)
 
+        axs[1, 0].plot(t, Iupper, color='black')
+        axs[1, 0].plot(t,Imiddle, color='crimson')
+        axs[1, 0].plot(t, Ilower, color='tab:orange')
 
         z = np.polyfit(t, I, 1)
         p = np.poly1d(z)
-        axs[1, 0].plot(t, p(t), color='black',linestyle='--')
+        axs[1, 0].plot(t, p(t), color='black',linestyle='-.')
 
-
-        axs[1, 0].legend(['Total Infected Devices','Trendline'], loc='best',
-                         ncol=1, fancybox=True)
+        axs[1, 0].legend(['>50%','25%-50%','0-25%','Trendline'], loc='best',
+                         ncol=1, fancybox=True,title='% of Susceptible Infected')
 
         axs[1, 0].spines['bottom'].set_color('black')
         axs[1, 0].spines['left'].set_color('black')
+
+
+        axs[1, 0].axhline(N0 / 2, linestyle=':', color='silver')
+        axs[1, 0].axhline(N0 / 4, linestyle=':', color='silver')
+
 
         for spine in ('top', 'right'):
             axs[1, 0].spines[spine].set_visible(False)
@@ -179,7 +189,6 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
     # --------------------------------------------------------------------------------------------------------------------
 
-    #plt.subplots_adjust(left=0.06, bottom=0.055, right=0.98, top=0.97, wspace=0.2, hspace=0.2)
     plt.tight_layout()
     plt.savefig("fig_temp.png",transparent=True)
 
@@ -252,6 +261,9 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
         plt.setp(axs[0, 0], ylabel="Total Devices")
         axs[0, 0].grid()
 
+        axs[0, 0].axvline(I.argmax(axis=0), linestyle=':', color='silver')
+        axs[0, 0].text(I.argmax(axis=0) + 5, np.amax(I) + 10, 'Peak Infected\nDay: {}'.format(I.argmax(axis=0)),color='silver')
+
         axs[0, 0].plot(t, S, label='Unaffected', color='tab:blue')
         axs[0, 0].plot(t, I, linestyle='--', label='Infected', color='tab:orange')
         axs[0, 0].plot(t, R, label='Recovered & protected', color='tab:green')
@@ -307,7 +319,7 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
 
         axs[1, 1].plot(np.delete(t, 0), Iupper, color='crimson')
 
-        axs[1, 1].plot(t, 0 * t, linestyle='--', color='silver')
+        axs[1, 1].axhline(0, linestyle=':', color='silver')
 
         axs[1, 1].plot(np.delete(t, 0), Ilower, color='tab:green')
 
@@ -337,20 +349,34 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
         plt.setp(axs[1, 0], xlabel="Time (Days)")
         plt.setp(axs[1, 0], ylabel="Total Infected Devices")
 
+        upper = N0/2
+        lower = N0/4
 
-        axs[1, 0].plot(t, I,linewidth=2.0, color='tab:orange')
 
+        Iupper = np.ma.masked_where(I < upper, I)
+        Ilower = np.ma.masked_where(I > lower, I)
+        Imiddle = np.ma.masked_where((I < lower) | (I > upper), I)
+
+        axs[1, 0].plot(t, Iupper, color='black')
+        axs[1, 0].plot(t,Imiddle, color='crimson')
+        axs[1, 0].plot(t, Ilower, color='tab:orange')
 
         z = np.polyfit(t, I, 1)
         p = np.poly1d(z)
-        axs[1, 0].plot(t, p(t), color='black',linestyle='--')
+        axs[1, 0].plot(t, p(t), color='black',linestyle='-.')
 
-
-        axs[1, 0].legend(['Total Infected Devices','Trendline'], loc='best',
-                         ncol=1, fancybox=True)
+        axs[1, 0].legend(['>50%','25%-50%','0-25%','Trendline'], loc='best',
+                         ncol=1, fancybox=True,title='% of Susceptible Infected')
 
         axs[1, 0].spines['bottom'].set_color('black')
         axs[1, 0].spines['left'].set_color('black')
+
+        #axs[1, 0].plot(t, N0 / 2, linestyle='--', color='silver')
+        #axs[1, 0].plot(t, N0 / 4, linestyle='--', color='silver')
+
+        axs[1, 0].axhline(N0 / 2, linestyle=':', color='silver')
+        axs[1, 0].axhline(N0 / 4, linestyle=':', color='silver')
+
 
         for spine in ('top', 'right'):
             axs[1, 0].spines[spine].set_visible(False)
@@ -428,6 +454,10 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         axs[0, 0].spines['bottom'].set_color('black')
         axs[0, 0].spines['left'].set_color('black')
 
+        axs[0, 0].axvline(I.argmax(axis=0), linestyle=':', color='silver')
+        axs[0, 0].text(I.argmax(axis=0) + 5, np.amax(I) + 10, 'Peak Infected\nDay: {}'.format(I.argmax(axis=0)),color='silver')
+
+
         for spine in ('top', 'right'):
             axs[0, 0].spines[spine].set_visible(False)
 
@@ -474,7 +504,7 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
         axs[1, 1].plot(np.delete(t, 0), Iupper, color='crimson')
 
-        axs[1, 1].plot(t, 0 * t, linestyle='-', color='silver')
+        axs[1, 1].axhline(0, linestyle=':', color='silver')
 
         axs[1, 1].plot(np.delete(t, 0), Ilower, color='tab:green')
 
@@ -501,20 +531,33 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         plt.setp(axs[1, 0], xlabel="Time (Days)")
         plt.setp(axs[1, 0], ylabel="Total Infected Devices")
 
+        upper = N0/2
+        lower = N0/4
 
-        axs[1, 0].plot(t, I,linewidth=2.0, color='tab:orange')
+        Iupper = np.ma.masked_where(I < upper, I)
+        Ilower = np.ma.masked_where(I > lower, I)
+        Imiddle = np.ma.masked_where((I < lower) | (I > upper), I)
 
+        axs[1, 0].plot(t, Iupper, color='black')
+        axs[1, 0].plot(t,Imiddle, color='crimson')
+        axs[1, 0].plot(t, Ilower, color='tab:orange')
 
         z = np.polyfit(t, I, 1)
         p = np.poly1d(z)
-        axs[1, 0].plot(t, p(t), color='black',linestyle='--')
+        axs[1, 0].plot(t, p(t), color='black',linestyle='-.')
 
-
-        axs[1, 0].legend(['Total Infected Devices','Trendline'], loc='best',
-                         ncol=1, fancybox=True)
+        axs[1, 0].legend(['>50%','25%-50%','0-25%','Trendline'], loc='best',
+                         ncol=1, fancybox=True,title='% of Susceptible Infected')
 
         axs[1, 0].spines['bottom'].set_color('black')
         axs[1, 0].spines['left'].set_color('black')
+
+        #axs[1, 0].plot(t, N0 / 2, linestyle='--', color='silver')
+        #axs[1, 0].plot(t, N0 / 4, linestyle='--', color='silver')
+
+        axs[1, 0].axhline(N0 / 2, linestyle=':', color='silver')
+        axs[1, 0].axhline(N0 / 4, linestyle=':', color='silver')
+
 
         for spine in ('top', 'right'):
             axs[1, 0].spines[spine].set_visible(False)
@@ -650,7 +693,9 @@ def SEIR(sbx_healthy, sbx_infected, sbx_days, sbx_hibernation, sbx_propagation, 
         plt.setp(axs[1, 0], ylabel="Total Infected Devices")
 
 
+
         axs[1, 0].plot(t, I,linewidth=2.0, color='tab:orange')
+
 
 
         z = np.polyfit(t, I, 1)
