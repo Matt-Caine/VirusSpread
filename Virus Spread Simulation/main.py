@@ -1,12 +1,10 @@
 import sys
 import time
-import os
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QSplashScreen, QGridLayout, QWidget, QDesktopWidget, QCheckBox
 from PyQt5.QtGui import QPixmap
 
 from models import SIR, SIRD, SIS, SEIR
-#from new_models import SIR, SIRD, SIS, SEIR
 
 class Splash(QSplashScreen):
     def __init__(self):
@@ -113,10 +111,14 @@ class MyWindow(QMainWindow):
         #-----------------------------------------------------------------------------------------------Other section
         self.chbx_firewall = QtWidgets.QCheckBox("IDS/IPS",self)
         self.chbx_disconnected = QtWidgets.QCheckBox("Offline Nodes", self)
+        self.chbx_3 = QtWidgets.QCheckBox("Option 3", self)
+        self.chbx_4 = QtWidgets.QCheckBox("Option 4", self)
+        self.chbx_5 = QtWidgets.QCheckBox("Option 5", self)
+        self.chbx_6 = QtWidgets.QCheckBox("Option 6", self)
 
         # Window frame settings
         self.setFixedSize(1700, 900)
-        self.setWindowTitle("Comp3000 - Computer Virus Spread Visualization")
+        self.setWindowTitle("Computer Virus Spread Visualization 2022")
         self.icon = QtGui.QIcon()
         self.icon.addPixmap(QtGui.QPixmap('Header.png'), QtGui.QIcon.Selected, QtGui.QIcon.On)
         self.setWindowIcon(self.icon)
@@ -124,6 +126,9 @@ class MyWindow(QMainWindow):
         self.simulate()
 
     def initUI(self):
+
+        #window Icon
+        self.setWindowIcon(QtGui.QIcon('Icon.ico'))
 
         #----------------------------------Form----------------------------------#
 
@@ -240,6 +245,11 @@ class MyWindow(QMainWindow):
 
         self.chbx_firewall.move(19, 490)
         self.chbx_disconnected.move(19, 510)
+
+        self.chbx_3.move(19, 530)
+        self.chbx_4.move(19, 550)
+        self.chbx_5.move(19, 570)
+        self.chbx_6.move(19, 590)
 
 
         # ----------------------------------SIMSection----------------------------------#

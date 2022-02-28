@@ -42,7 +42,6 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
     t = np.linspace(0, D0, D0)
 
     # The SIR model differential equations
-
     def deriv(y, t, N0, beta, gamma):
         S, I, R = y
         dSdt = -(beta * S * I / N0)
@@ -76,7 +75,7 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
         axs[0, 0].axvline(I.argmax(axis=0), linestyle=':', color='silver')
 
-        axs[0, 0].text(I.argmax(axis=0) + 5, np.amax(I)+10, 'Peak Infected\nDay: {}'.format(I.argmax(axis=0)), color='silver')
+        axs[0, 0].text(I.argmax(axis=0) + 5, np.amax(I)+10, 'Peak Infected\nDay: {}'.format(I.argmax(axis=0)), color='black')
 
         legend = axs[0, 0].legend()
         legend.get_frame().set_alpha(0.5)
@@ -131,7 +130,7 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         axs[1, 1].axhline(0, linestyle=':', color='silver')
         axs[1, 1].plot(np.delete(t, 0), Ilower, color='tab:green')
 
-        axs[1, 1].legend(['Increasing Infected','Zero','Decreasing  Infected'], loc='best',
+        axs[1, 1].legend(['Increasing Infected','Zero Change','Decreasing  Infected'], loc='best',
                          ncol=1, fancybox=True)
 
 
@@ -261,8 +260,7 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
         plt.setp(axs[0, 0], ylabel="Total Devices")
         axs[0, 0].grid()
 
-        axs[0, 0].axvline(I.argmax(axis=0), linestyle=':', color='silver')
-        axs[0, 0].text(I.argmax(axis=0) + 5, np.amax(I) + 10, 'Peak Infected\nDay: {}'.format(I.argmax(axis=0)),color='silver')
+
 
         axs[0, 0].plot(t, S, label='Unaffected', color='tab:blue')
         axs[0, 0].plot(t, I, linestyle='--', label='Infected', color='tab:orange')
@@ -271,6 +269,10 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
 
         legend = axs[0, 0].legend()
         legend.get_frame().set_alpha(0.5)
+
+        axs[0, 0].axvline(I.argmax(axis=0), linestyle=':', color='silver')
+        axs[0, 0].text(I.argmax(axis=0) + 5, np.amax(I) + 10, 'Peak Infected\nDay: {}'.format(I.argmax(axis=0)),
+                       color='black')
 
         axs[0, 0].spines['bottom'].set_color('black')
         axs[0, 0].spines['left'].set_color('black')
@@ -293,6 +295,7 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
         sizes = [S[-1] / P0 * 100, I[-1] / P0 * 100, R[-1] / P0 * 100, D[-1]/N0*100]
 
         labels = [f'{l} | {s:0.1f}%' for l, s in zip(labels, sizes)]
+
 
         axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': 'white'},
                       pctdistance=0.8, labeldistance=1.07, startangle=90, colors=colors)
@@ -323,7 +326,7 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
 
         axs[1, 1].plot(np.delete(t, 0), Ilower, color='tab:green')
 
-        axs[1, 1].legend(['Increasing Infected', 'Zero', 'Decreasing  Infected'], loc='best',
+        axs[1, 1].legend(['Increasing Infected', 'Zero Change', 'Decreasing  Infected'], loc='best',
                          ncol=1, fancybox=True)
 
         plt.setp(axs[1, 1], xlabel="Time (Days)")
@@ -455,7 +458,7 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         axs[0, 0].spines['left'].set_color('black')
 
         axs[0, 0].axvline(I.argmax(axis=0), linestyle=':', color='silver')
-        axs[0, 0].text(I.argmax(axis=0) + 5, np.amax(I) + 10, 'Peak Infected\nDay: {}'.format(I.argmax(axis=0)),color='silver')
+        axs[0, 0].text(I.argmax(axis=0) + 5, np.amax(I) + 10, 'Peak Infected\nDay: {}'.format(I.argmax(axis=0)),color='black')
 
 
         for spine in ('top', 'right'):
@@ -508,7 +511,7 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
         axs[1, 1].plot(np.delete(t, 0), Ilower, color='tab:green')
 
-        axs[1, 1].legend(['Increasing Infected', 'Zero', 'Decreasing  Infected'], loc='best',
+        axs[1, 1].legend(['Increasing Infected', 'Zero Change', 'Decreasing  Infected'], loc='best',
                          ncol=1, fancybox=True)
 
         plt.setp(axs[1, 1], xlabel="Time (Days)")
