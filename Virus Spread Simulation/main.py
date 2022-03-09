@@ -3,6 +3,7 @@ import time
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QSplashScreen, QGridLayout, QWidget, QDesktopWidget, QCheckBox
 from PyQt5.QtGui import QPixmap
+import os
 
 from models import SIR, SIRD, SIS, SEIR
 
@@ -39,11 +40,11 @@ class MyWindow(QMainWindow):
         self.btn_Save = QtWidgets.QPushButton(self)
 
         self.Save_msg = QMessageBox()
-        self.Save_msg.setWindowTitle("Virus Spread")
-        self.Save_msg.setText("Your figure has been saved to /Saved/")
+        self.Save_msg.setWindowTitle("Computer Virus Spread Visualization 2022")
+        self.Save_msg.setText("👍 Figure & Parameters File saved to new dir in /Saved/")
 
         self.Not_added_msg = QMessageBox()
-        self.Not_added_msg.setWindowTitle("Virus Spread")
+        self.Not_added_msg.setWindowTitle("Computer Virus Spread Visualization 2022")
         self.Not_added_msg.setText("Sorry, The S.E.I.R model has not been added yet 😞")
 
         #progress
@@ -51,6 +52,10 @@ class MyWindow(QMainWindow):
 
         #Param Reset button
         self.btn_reset = QtWidgets.QPushButton(self)
+
+        # import export buttons
+        #self.btn_export = QtWidgets.QPushButton(self)
+        #self.btn_import = QtWidgets.QPushButton(self)
 
         #dropodown
         self.lbl_viruses = QtWidgets.QLabel(self)
@@ -109,8 +114,8 @@ class MyWindow(QMainWindow):
         self.lbl_MattCaine = QtWidgets.QLabel(self)
 
         #-----------------------------------------------------------------------------------------------Other section
-        self.chbx_firewall = QtWidgets.QCheckBox("IDS/IPS",self)
-        self.chbx_disconnected = QtWidgets.QCheckBox("Offline Nodes", self)
+        self.chbx_ids = QtWidgets.QCheckBox("IDS/IPS",self)
+        self.chbx_offline = QtWidgets.QCheckBox("Offline Nodes", self)
         self.chbx_3 = QtWidgets.QCheckBox("Option 3", self)
         self.chbx_4 = QtWidgets.QCheckBox("Option 4", self)
         self.chbx_5 = QtWidgets.QCheckBox("Option 5", self)
@@ -119,9 +124,6 @@ class MyWindow(QMainWindow):
         # Window frame settings
         self.setFixedSize(1700, 900)
         self.setWindowTitle("Computer Virus Spread Visualization 2022")
-        self.icon = QtGui.QIcon()
-        self.icon.addPixmap(QtGui.QPixmap('Header.png'), QtGui.QIcon.Selected, QtGui.QIcon.On)
-        self.setWindowIcon(self.icon)
         self.initUI()
         self.simulate()
 
@@ -131,8 +133,6 @@ class MyWindow(QMainWindow):
         self.setWindowIcon(QtGui.QIcon('Icon.ico'))
 
         #----------------------------------Form----------------------------------#
-
-
         self.header.setPixmap(self.Head_img)
         self.header.resize(1920, 50)
 
@@ -154,7 +154,7 @@ class MyWindow(QMainWindow):
         self.lbl_virus_Header.setText("𝗩𝗶𝗿𝘂𝘀 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:")
         self.lbl_virus_Header.move(16, 260)
 
-        self.lbl_other_Header.setText("𝗥𝗗𝗠 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:")
+        self.lbl_other_Header.setText("𝗠𝗶𝘀𝗰 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:")
         self.lbl_other_Header.move(16, 470)
 
 
@@ -242,9 +242,8 @@ class MyWindow(QMainWindow):
 
         # ----------------------------------other Section----------------------------------#
 
-
-        self.chbx_firewall.move(19, 490)
-        self.chbx_disconnected.move(19, 510)
+        self.chbx_ids.move(19, 490)
+        self.chbx_offline.move(19, 510)
 
         self.chbx_3.move(19, 530)
         self.chbx_4.move(19, 550)
@@ -254,25 +253,31 @@ class MyWindow(QMainWindow):
 
         # ----------------------------------SIMSection----------------------------------#
 
+        # import export buttons
+        #self.btn_import.setText("Import")
+        #self.btn_import.move(19, 697)
+
+        #self.btn_export.setText("🖨️ Export Params")
+        #self.btn_export.move(19, 733)
+        #self.btn_Save.clicked.connect(self.Click_test)
+
         #--------Reset Button--------#
         self.btn_reset.setText("🗑️ Reset")
         self.btn_reset.move(19, 769)
         self.btn_reset.clicked.connect(self.reset_parameters)
 
-        # ----------------------------------Simulate----------------------------------#
+        #--------Save Button--------#
+
+        self.btn_Save.setText("💾 Save")
+        self.btn_Save.move(19, 805)
+        self.btn_Save.clicked.connect(self.Save)
+
+        #--------Run Sim Button--------#
         self.btn_simulate.setText("📈 Simulate")
 
         self.btn_simulate.move(19, 841)
 
         self.btn_simulate.clicked.connect(self.simulate)
-
-        # ----------------------------------Simulate----------------------------------#
-
-        self.btn_Save.setText("💾 Save Figure")
-        self.btn_Save.move(19, 805)
-
-        self.btn_Save.clicked.connect(self.Save)
-
 
     # ----------------------------------Functions----------------------------------#
     # --------Test Button--------#
@@ -281,13 +286,21 @@ class MyWindow(QMainWindow):
         print("Button Clicked")
 
     # --------Save--------#
-
     def Save(self):
+        self.stamp = time.strftime("%Y%m%d-%H%M%S")
+        os.mkdir('Saved/{}'.format(self.stamp))
+
         self.img = QPixmap('fig_temp.png')
+        self.img.save('Saved/{}/Figure.png'.format(self.stamp))
 
-        self.img.save('Saved/{stamp}.png'.format(stamp = time.strftime("%Y%m%d-%H%M%S")))
+        with open('Saved/{}/Parameters.txt'.format(self.stamp), 'w') as f:
+            f.write('Model: {}\n# 0 = SIR,1=SIRD,2=SEIR,3=SIS\n\nStarting Susceptible: {}\nStarting Infected: {}\n'
+                    'Days Shown: {}\n\nPropagation Rate: {}\nRecovery Rate: {}\nMortality Rate: {}\n'
+                    '# Mortality Only Applicable if Model = 1(SIRD)\n\n'.format(self.cbx_Virus_Model.currentIndex(),self.sbx_healthy.value(),
+                                                                                self.sbx_infected.value(),self.sbx_days.value(),self.sbx_propagation.value(),
+                                                                                self.sbx_r_chance.value(),self.sbx_mortality.value()))
+        #show saved box
         self.Save_msg.exec_()
-
 
     # --------model locks--------#
     def on_model_combobox_changed(self, value):
@@ -316,17 +329,16 @@ class MyWindow(QMainWindow):
             self.cbx_viruses.setCurrentIndex(0)
             self.sbx_mortality.setValue(5)
             self.simulate()
-            self.chbx_disconnected.setChecked(False)
-            self.chbx_firewall.setChecked(False)
+            self.chbx_offline.setChecked(False)
+            self.chbx_ids.setChecked(False)
 
-    # -----------------------------------------------------MODELS-----------------------------------------------------#
 
+    #-----------------------------------------------------simulate MODELS-----------------------------------------------------#
     def simulate(self):
         try:
 
             if self.cbx_Virus_Model.currentIndex() == 0:
-                SIR(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance, self.chbx_firewall, self.chbx_disconnected)
-
+                SIR(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance, self.chbx_ids, self.chbx_offline)
 
                 print("SIR_Simulation()")
                 #show results
@@ -338,7 +350,7 @@ class MyWindow(QMainWindow):
                 self.btn_Save.setDisabled(False)
 
             elif self.cbx_Virus_Model.currentIndex() == 1:
-                SIRD(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.sbx_mortality,self.chbx_firewall, self.chbx_disconnected)
+                SIRD(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.sbx_mortality,self.chbx_ids, self.chbx_offline)
 
                 print("SIRD_Simulation()")
                 #show results
@@ -350,20 +362,21 @@ class MyWindow(QMainWindow):
                 self.btn_Save.setDisabled(False)
 
             elif self.cbx_Virus_Model.currentIndex() == 2:
-                SEIR(self.sbx_healthy, self.sbx_infected, self.sbx_days,self.sbx_hibernation, self.sbx_propagation, self.sbx_r_chance, self.chbx_firewall, self.chbx_disconnected)
+                self.Not_added_msg.exec_()
+                #SEIR(self.sbx_healthy, self.sbx_infected, self.sbx_days,self.sbx_hibernation, self.sbx_propagation, self.sbx_r_chance, self.chbx_ids, self.chbx_offline)
 
                 print("SEIR_Simulation()")
                 #show results
-                self.Fig_img = QPixmap('fig_temp.png')
-                self.figure.setPixmap(self.Fig_img)
-                self.figure.resize(self.Fig_img.width(), self.Fig_img.height())
-                self.figure.move(145, 80)
+                #self.Fig_img = QPixmap('fig_temp.png')
+                #self.figure.setPixmap(self.Fig_img)
+                #self.figure.resize(self.Fig_img.width(), self.Fig_img.height())
+                #self.figure.move(145, 80)
 
                 self.btn_Save.setDisabled(False)
 
 
             elif self.cbx_Virus_Model.currentIndex() == 3:
-                SIS(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.chbx_firewall,self.chbx_disconnected)
+                SIS(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.chbx_ids,self.chbx_offline)
 
                 print("SIS_Simulation()")
                 # show results
@@ -384,7 +397,7 @@ def window():
     win = MyWindow()
     splash.show()
     print("Spalsh()")
-    time.sleep(0.8)
+    time.sleep(1)
     splash.hide()
     print("Main_Win_Show()")
     win.show()
