@@ -4,7 +4,7 @@
 
 
 <p align="center">
-# Computer Virus Spread Visualisation Tool
+<h1>Computer Virus Spread Visualisation Tool<h1>
 </p>
 
 ## Description
