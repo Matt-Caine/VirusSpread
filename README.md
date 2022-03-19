@@ -1,4 +1,4 @@
-# Computer Virus Spread Visualisation Tool
+# ![image](https://user-images.githubusercontent.com/29525942/159131458-ddc18a9a-9328-4be5-8efe-3ed471da8f53.png) Computer Virus Spread Visualisation Tool
 
 ## Description
 
