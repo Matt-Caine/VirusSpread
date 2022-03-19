@@ -6,11 +6,8 @@ A visualisation Tool designed for users who may want to gain an understanding of
 
 ## Authors
 
-Contributors names and contact info
 Matt Caine
 
 ## License
-
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
 
 ## Acknowledgments
