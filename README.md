@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">Computer Virus Spread Visualisation Tool</h1>
-<h6 align="center">This repository is part of my final year univeristy project.</h6>
+<h6 align="center">This repository contains my final year univeristy project.</h6>
 
 ## About
 A visualisation Tool designed for users who may want to gain an understanding of how a computer virus *could potentially* spread under specified parameters, such as recovery and propagation rates, IDS/IPS status and amount of offline nodes etc.
