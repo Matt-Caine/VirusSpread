@@ -26,7 +26,7 @@ Susceptible ⇢ Infected ⇢ Susceptible
 ![SIRD](https://user-images.githubusercontent.com/29525942/159133843-fd95ad7f-5760-4dc2-b4d0-6f3522518d6a.png)
 
 ``` 
-Susceptible ⇢ Infected ⇢ Recovered or Deceased
+Susceptible ⇢ Infected ⇢ Recovered or Irrecoverable (Deceased)
 ```
 ## Possible Future Models:
 ### S.E.I.R 
