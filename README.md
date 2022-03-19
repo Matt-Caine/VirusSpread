@@ -3,8 +3,9 @@
 </p>
 
 
-
+<p align="center">
 # Computer Virus Spread Visualisation Tool
+</p>
 
 ## Description
 
