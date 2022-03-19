@@ -1,4 +1,8 @@
-<div style="text-align:center"><img src="https://user-images.githubusercontent.com/29525942/159131458-ddc18a9a-9328-4be5-8efe-3ed471da8f53.png" /></div>
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/29525942/159131458-ddc18a9a-9328-4be5-8efe-3ed471da8f53.png"/>
+</p>
+
+
 
 # Computer Virus Spread Visualisation Tool
 
