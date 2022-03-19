@@ -6,7 +6,16 @@
 <h6 align="center">This repository contains my final year univeristy project.</h6>
 
 ## About
-A visualisation Tool designed for users who may want to gain an understanding of how a computer virus *could potentially* spread under specified parameters, such as recovery and propagation rates, IDS/IPS status and amount of offline nodes etc.
+The Computer Virus Spread Visualisation Tool is designed for users who may want to gain an understanding of how a computer virus *could potentially* spread under specified parameters, such as recovery and propagation rates, IDS/IPS status and amount of offline nodes etc.
+
+## Technology
+The tool is written in python and utilises the following libraries:
+- [PyQT5](https://pypi.org/project/PyQt5/)
+- [NumPy](https://numpy.org/)
+- [Matplotlib](https://matplotlib.org/)
+- [SciPy](https://scipy.org/)
+
+
 
 ## Compartmental Models
 Compartmental models are common modelling formulas, often applied in the field of epidemiology to model the spread of infectious diseases and virus. These models, though designed for biological viruses, will hopefully help users better understand the impact a computer virus could have, but also highlight how mitigations such as Firewalls and IDS can help slow the spread. 
