@@ -22,8 +22,9 @@ Compartmental models are common modelling formulas, often applied in the field o
 
 ### Currently Implemented Models:
 #### S.I.R 
-``` 
 ![SIR](https://user-images.githubusercontent.com/29525942/159133833-18550d4b-14c0-4462-982f-d1213677621f.png)
+
+``` 
 Susceptible ⇢ Infected ⇢ Recovered/Protected
 ```
 #### S.I.S 
