@@ -26,7 +26,6 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         # Contact rate
         beta = int(sbx_propagation.value()) / 100
 
-
     # recovery rate
     gamma = int(sbx_r_chance.value()) / 1000
 
@@ -100,7 +99,7 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         sizes = [S[-1] / P0 * 100, I[-1] / P0 * 100, R[-1] / P0 * 100]
         labels = [f'{l} | {s:0.1f}%' for l, s in zip(labels, sizes)]
 
-        axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': 'white'},
+        axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': '#f0f0f0'},
                       pctdistance=0.8, labeldistance=1.07, startangle=90, colors=colors)
 
         axs[0, 1].legend(labels, loc="best")
@@ -294,12 +293,13 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
         labels = 'Unaffected', 'Infected', 'Recovered and Protected', 'Irrecoverable'
         colors = ['tab:blue', 'tab:orange', 'tab:green','crimson']
 
+
         sizes = [S[-1] / P0 * 100, I[-1] / P0 * 100, R[-1] / P0 * 100, D[-1]/N0*100]
 
         labels = [f'{l} | {s:0.1f}%' for l, s in zip(labels, sizes)]
 
 
-        axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': 'white'},
+        axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': '#f0f0f0'},
                       pctdistance=0.8, labeldistance=1.07, startangle=90, colors=colors)
 
         axs[0, 1].legend(labels, loc="best")
@@ -484,7 +484,7 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
         labels = [f'{l} | {s:0.1f}%' for l, s in zip(labels, sizes)]
 
-        axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': 'white'},
+        axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': '#f0f0f0'},
                       pctdistance=0.8, labeldistance=1.07, startangle=90, colors=colors)
 
         axs[0, 1].legend(labels, loc="best")
@@ -672,7 +672,7 @@ def SEIR(sbx_healthy, sbx_infected, sbx_days, sbx_hibernation, sbx_propagation, 
 
         labels = [f'{l} | {s:0.1f}%' for l, s in zip(labels, sizes)]
 
-        axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': 'white'},
+        axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': '#f0f0f0'},
                       pctdistance=0.8, labeldistance=1.07, startangle=90, colors=colors)
 
         axs[0, 1].legend(labels, loc="best")

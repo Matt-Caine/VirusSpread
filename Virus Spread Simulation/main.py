@@ -42,19 +42,38 @@ class MyWindow(QMainWindow):
         self.Save_msg = QMessageBox()
         self.Save_msg.setWindowTitle("Computer Virus Spread Visualization 2022")
         self.Save_msg.setText("👍 Figure & Parameters File saved to new dir in /Saved/")
+        self.Save_msg.setWindowIcon(QtGui.QIcon('Icon.ico'))
 
         self.Not_added_msg = QMessageBox()
         self.Not_added_msg.setWindowTitle("Computer Virus Spread Visualization 2022")
         self.Not_added_msg.setText("Sorry, The S.E.I.R model has not been added yet 😞")
+        self.Not_added_msg.setWindowIcon(QtGui.QIcon('Icon.ico'))
 
         #progress
         self.progress = QtWidgets.QProgressBar(self)
+        self.progress.setGeometry(2, 878, 1698, 16)
+        Bar_STYLE = """
+        QProgressBar{
+            border: 2px solid grey;
+            border-radius: 5px;
+            bar.setFormat("% p")
+            text-align: center
+        }
+
+        QProgressBar::chunk {
+            background-color: #2CA02C;
+            width: 10px;
+            margin: 1px;
+        }
+        """
+        self.progress.setStyleSheet(Bar_STYLE)
+
+        self.progress.hide()
 
         #Param Reset button
         self.btn_reset = QtWidgets.QPushButton(self)
 
-        # import export buttons
-        #self.btn_export = QtWidgets.QPushButton(self)
+        # import buttons
         #self.btn_import = QtWidgets.QPushButton(self)
 
         #dropodown
@@ -114,9 +133,9 @@ class MyWindow(QMainWindow):
         self.lbl_MattCaine = QtWidgets.QLabel(self)
 
         #-----------------------------------------------------------------------------------------------Other section
-        self.chbx_ids = QtWidgets.QCheckBox("IDS/IPS",self)
+        self.chbx_ids = QtWidgets.QCheckBox("Network IDS/IPS",self)
         self.chbx_offline = QtWidgets.QCheckBox("Offline Nodes", self)
-        self.chbx_3 = QtWidgets.QCheckBox("Option 3", self)
+        self.chbx_3 = QtWidgets.QCheckBox("Host Firewalls", self)
         self.chbx_4 = QtWidgets.QCheckBox("Option 4", self)
         self.chbx_5 = QtWidgets.QCheckBox("Option 5", self)
         self.chbx_6 = QtWidgets.QCheckBox("Option 6", self)
@@ -137,7 +156,7 @@ class MyWindow(QMainWindow):
         self.header.resize(1920, 50)
 
         self.lbl_MattCaine.setText("© Matt Caine - UoP - Comp3000 Project")
-        self.lbl_MattCaine.setGeometry(1490, 875, 300, 20)
+        self.lbl_MattCaine.setGeometry(1500, 875, 300, 20)
 
         self.btn_Save.setDisabled(True)
         self.sbx_hibernation.setDisabled(True)
@@ -257,33 +276,42 @@ class MyWindow(QMainWindow):
         #self.btn_import.setText("Import")
         #self.btn_import.move(19, 697)
 
-        #self.btn_export.setText("🖨️ Export Params")
-        #self.btn_export.move(19, 733)
-        #self.btn_Save.clicked.connect(self.Click_test)
-
         #--------Reset Button--------#
-        self.btn_reset.setText("🗑️ Reset")
+        self.btn_reset.setText("🗑️ | Reset")
         self.btn_reset.move(19, 769)
         self.btn_reset.clicked.connect(self.reset_parameters)
 
         #--------Save Button--------#
 
-        self.btn_Save.setText("💾 Save")
+        self.btn_Save.setText("💾 | Export")
         self.btn_Save.move(19, 805)
         self.btn_Save.clicked.connect(self.Save)
 
         #--------Run Sim Button--------#
-        self.btn_simulate.setText("📈 Simulate")
+        self.btn_simulate.setText("📈 | Simulate")
 
         self.btn_simulate.move(19, 841)
 
         self.btn_simulate.clicked.connect(self.simulate)
+        self.btn_simulate.clicked.connect(self.progressbar)
 
     # ----------------------------------Functions----------------------------------#
     # --------Test Button--------#
     @staticmethod
     def Click_test():
         print("Button Clicked")
+
+    # --------Progress--------#
+    def progressbar(self):
+        self.completed = 0
+
+        self.progress.show()
+        self.lbl_MattCaine.hide()
+        while self.completed < 100:
+            self.completed += 0.0002
+            self.progress.setValue(self.completed)
+        self.progress.hide()
+        self.lbl_MattCaine.show()
 
     # --------Save--------#
     def Save(self):
@@ -331,6 +359,8 @@ class MyWindow(QMainWindow):
             self.simulate()
             self.chbx_offline.setChecked(False)
             self.chbx_ids.setChecked(False)
+
+
 
 
     #-----------------------------------------------------simulate MODELS-----------------------------------------------------#

@@ -1,0 +1,12 @@
+Model: 0
+# 0 = SIR,1=SIRD,2=SEIR,3=SIS
+
+Starting Susceptible: 25000
+Starting Infected: 100
+Days Shown: 365
+
+Propagation Rate: 5
+Recovery Rate: 10
+Mortality Rate: 5
+# Mortality Only Applicable if Model = 1(SIRD)
+
