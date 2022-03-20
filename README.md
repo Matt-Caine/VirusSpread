@@ -51,6 +51,7 @@ Susceptible ⇢ Exposed ⇢ Infected ⇢ Recovered
 <p align="center">
   <img src="https://user-images.githubusercontent.com/29525942/159131626-6f581882-f1c6-4cbd-b6ad-5657b5d1a987.png"/>
 </p>
+<h6 align="center">*Image Taken from mid-March Build</h6>
 
 ## Authors
 
