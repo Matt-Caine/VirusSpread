@@ -7,7 +7,7 @@ import random
 plt.style.use('ggplot')
 plt.rcParams['legend.title_fontsize'] = 'x-small'
 
-def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_ids,chbx_offline):
+def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_ids,chbx_offline,chbx_HostFire):
     #Starting Susceptible
     N0 = sbx_healthy.value()
 
@@ -19,19 +19,22 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
     # Days to run
     D0 = sbx_days.value()
 
+    beta = int(sbx_propagation.value()) / 100
+
     if chbx_ids.isChecked():
         # Contact rate
-        beta = int(sbx_propagation.value()) / (random.uniform(200, 210))
-    else:
+        beta = beta - (sbx_propagation.value() / (random.uniform(200, 210)))
+
+    if chbx_HostFire.isChecked():
         # Contact rate
-        beta = int(sbx_propagation.value()) / 100
+        beta = beta - (sbx_propagation.value() / (random.uniform(200, 210)))
 
     # recovery rate
     gamma = int(sbx_r_chance.value()) / 1000
 
     # recovered individuals
     if chbx_offline.isChecked():
-        R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.1, 1.8)))
+        R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.2, 1.8)))
     else:
         R0 = 0
     # work out susceptible
@@ -190,7 +193,7 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
     plt.tight_layout()
     plt.savefig("fig_temp.png",transparent=True)
 
-def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_mortality,chbx_ids,chbx_offline):
+def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_mortality,chbx_ids,chbx_offline,chbx_HostFire):
 
     #Starting Susceptible
     N0 = sbx_healthy.value()
@@ -203,16 +206,19 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
     # Days to run
     D0 = sbx_days.value()
 
+    beta = int(sbx_propagation.value()) / 100
+
     if chbx_ids.isChecked():
         # Contact rate
-        beta = int(sbx_propagation.value()) / (random.uniform(165, 170))
-    else:
+        beta = beta - (sbx_propagation.value() / (random.uniform(200, 210)))
+
+    if chbx_HostFire.isChecked():
         # Contact rate
-        beta = int(sbx_propagation.value()) / 100
+        beta = beta - (sbx_propagation.value() / (random.uniform(200, 210)))
 
     # recovered individuals
     if chbx_offline.isChecked():
-        R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.1, 1.8)))
+        R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.2, 1.8)))
     else:
         R0 = 0
 
@@ -394,7 +400,7 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
     plt.tight_layout()
     plt.savefig("fig_temp.png",transparent=True)
 
-def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_ids,chbx_offline):
+def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_ids,chbx_offline,chbx_HostFire):
     #Starting Susceptible
     N0 = sbx_healthy.value()
     # Initial number of infected
@@ -404,19 +410,22 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
     # Days to run
     D0 = sbx_days.value()
 
+    beta = int(sbx_propagation.value()) / 100
+
     if chbx_ids.isChecked():
         # Contact rate
-        beta = int(sbx_propagation.value()) / (random.uniform(190, 200))
-    else:
+        beta = beta - (sbx_propagation.value() / (random.uniform(200, 210)))
+
+    if chbx_HostFire.isChecked():
         # Contact rate
-        beta = int(sbx_propagation.value()) / 100
+        beta = beta - (sbx_propagation.value() / (random.uniform(200, 210)))
 
     # recovery rate
     gamma = int(sbx_r_chance.value()) / 1000
     # recovered individuals
     # recovered individuals
     if chbx_offline.isChecked():
-        R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.1, 1.8)))
+        R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.2, 1.8)))
     else:
         R0 = 0
     # work out susceptible
@@ -576,7 +585,7 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
     plt.tight_layout()
     plt.savefig("fig_temp.png",transparent=True)
 
-def SEIR(sbx_healthy, sbx_infected, sbx_days, sbx_hibernation, sbx_propagation, sbx_r_chance,chbx_ids,chbx_offline):
+def SEIR(sbx_healthy, sbx_infected, sbx_days, sbx_hibernation, sbx_propagation, sbx_r_chance,chbx_ids,chbx_offline,chbx_HostFire):
     #Starting Susceptible
     N0 = sbx_healthy.value()
 
@@ -588,12 +597,15 @@ def SEIR(sbx_healthy, sbx_infected, sbx_days, sbx_hibernation, sbx_propagation, 
     # Days to run
     D0 = sbx_days.value()
 
+    beta = int(sbx_propagation.value()) / 100
+
     if chbx_ids.isChecked():
         # Contact rate
-        beta = int(sbx_propagation.value()) / (random.uniform(200, 210))
-    else:
+        beta = beta - (sbx_propagation.value() / (random.uniform(200, 210)))
+
+    if chbx_HostFire.isChecked():
         # Contact rate
-        beta = int(sbx_propagation.value()) / 100
+        beta = beta - (sbx_propagation.value() / (random.uniform(200, 210)))
 
     E0 = sbx_hibernation.value()
 
@@ -602,7 +614,7 @@ def SEIR(sbx_healthy, sbx_infected, sbx_days, sbx_hibernation, sbx_propagation, 
 
     # recovered individuals
     if chbx_offline.isChecked():
-        R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.1, 1.8)))
+        R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.2, 1.8)))
     else:
         R0 = 0
     # work out susceptible

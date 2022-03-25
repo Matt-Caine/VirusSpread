@@ -134,11 +134,26 @@ class MyWindow(QMainWindow):
 
         #-----------------------------------------------------------------------------------------------Other section
         self.chbx_ids = QtWidgets.QCheckBox("Network IDS/IPS",self)
-        self.chbx_offline = QtWidgets.QCheckBox("Offline Nodes", self)
-        self.chbx_3 = QtWidgets.QCheckBox("Host Firewalls", self)
+        self.chbx_ids.setToolTip('Simulates the presence of a Network IDS/IPS.')
+
+        self.chbx_offline = QtWidgets.QCheckBox("Realistic Nodes", self)
+        self.chbx_offline.setToolTip('Takes into account that devices are not on 24/7.')
+
+        self.chbx_HostFire = QtWidgets.QCheckBox("Host Firewalls", self)
+        self.chbx_HostFire.setToolTip('Simulates the presence of host based firewalls.')
+
+        #-------------------------------Dev----------------------------------------------
+
         self.chbx_4 = QtWidgets.QCheckBox("Option 4", self)
+        #self.chbx_4.setToolTip('This is a tooltip for the QPushButton widget')
         self.chbx_5 = QtWidgets.QCheckBox("Option 5", self)
+        #self.chbx_5.setToolTip('This is a tooltip for the QPushButton widget')
         self.chbx_6 = QtWidgets.QCheckBox("Option 6", self)
+        #self.chbx_6.setToolTip('This is a tooltip for the QPushButton widget')
+
+        self.chbx_4.setEnabled(False)
+        self.chbx_5.setEnabled(False)
+        self.chbx_6.setEnabled(False)
 
         # Window frame settings
         self.setFixedSize(1700, 900)
@@ -183,8 +198,13 @@ class MyWindow(QMainWindow):
         self.lbl_Virus_Model.setText("Virus Model")
         self.lbl_Virus_Model.move(20, 65)
 
-        self.cbx_Virus_Model.addItems(["✅ S.I.R","✅ S.I.R/D", "❌ S.E.I.R", "✅ S.I.S"])
+        self.cbx_Virus_Model.addItems(["✅ S.I.R","✅ S.I.R/D", "❌ S.E.I.R", "✅ S.I.S","❌ S.E.I.S"])
         self.cbx_Virus_Model.setGeometry(19, 90, 100, 25)
+
+        # Disable models
+        self.cbx_Virus_Model.model().item(2).setEnabled(False)
+        self.cbx_Virus_Model.model().item(4).setEnabled(False)
+
 
         self.cbx_Virus_Model.currentTextChanged.connect(self.on_model_combobox_changed)
 
@@ -194,7 +214,7 @@ class MyWindow(QMainWindow):
 
         self.sbx_healthy.move(19, 137)
         self.sbx_healthy.setMinimum(1)
-        self.sbx_healthy.setMaximum(99999)
+        self.sbx_healthy.setMaximum(1000000)
         self.sbx_healthy.setValue(25000)
         self.sbx_healthy.setSingleStep(100)
 
@@ -204,7 +224,7 @@ class MyWindow(QMainWindow):
 
         self.sbx_infected.move(19, 185)
         self.sbx_infected.setMinimum(1)
-        self.sbx_infected.setMaximum(99999)
+        self.sbx_infected.setMaximum(1000000)
         self.sbx_infected.setValue(100)
         self.sbx_infected.setSingleStep(100)
 
@@ -214,7 +234,7 @@ class MyWindow(QMainWindow):
 
         self.sbx_days.move(19, 233)
         self.sbx_days.setMinimum(10)
-        self.sbx_days.setMaximum(10000)
+        self.sbx_days.setMaximum(10001)
         self.sbx_days.setValue(365)
         self.sbx_days.setSingleStep(5)
 
@@ -223,7 +243,7 @@ class MyWindow(QMainWindow):
         self.lbl_propagation.move(20, 275)
         self.sbx_propagation.move(19, 299)
 
-        self.sbx_propagation.setMinimum(1)
+        self.sbx_propagation.setMinimum(0)
         self.sbx_propagation.setMaximum(100)
         self.sbx_propagation.setValue(5)
         self.sbx_propagation.setSingleStep(5)
@@ -243,7 +263,7 @@ class MyWindow(QMainWindow):
         self.lbl_r_chance.move(20, 371)
         self.sbx_r_chance.move(19, 395)
 
-        self.sbx_r_chance.setMinimum(1)
+        self.sbx_r_chance.setMinimum(0)
         self.sbx_r_chance.setMaximum(100)
         self.sbx_r_chance.setValue(10)
         self.sbx_r_chance.setSingleStep(5)
@@ -254,7 +274,7 @@ class MyWindow(QMainWindow):
         self.lbl_mortality.move(20, 419)
         self.sbx_mortality.move(19, 443)
 
-        self.sbx_mortality.setMinimum(1)
+        self.sbx_mortality.setMinimum(0)
         self.sbx_mortality.setMaximum(100)
         self.sbx_mortality.setValue(5)
         self.sbx_mortality.setSingleStep(5)
@@ -263,8 +283,8 @@ class MyWindow(QMainWindow):
 
         self.chbx_ids.move(19, 490)
         self.chbx_offline.move(19, 510)
+        self.chbx_HostFire.move(19, 530)
 
-        self.chbx_3.move(19, 530)
         self.chbx_4.move(19, 550)
         self.chbx_5.move(19, 570)
         self.chbx_6.move(19, 590)
@@ -359,6 +379,7 @@ class MyWindow(QMainWindow):
             self.simulate()
             self.chbx_offline.setChecked(False)
             self.chbx_ids.setChecked(False)
+            self.chbx_HostFire.setChecked(False)
 
 
 
@@ -368,7 +389,7 @@ class MyWindow(QMainWindow):
         try:
 
             if self.cbx_Virus_Model.currentIndex() == 0:
-                SIR(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance, self.chbx_ids, self.chbx_offline)
+                SIR(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance, self.chbx_ids, self.chbx_offline,self.chbx_HostFire)
 
                 print("SIR_Simulation()")
                 #show results
@@ -380,7 +401,7 @@ class MyWindow(QMainWindow):
                 self.btn_Save.setDisabled(False)
 
             elif self.cbx_Virus_Model.currentIndex() == 1:
-                SIRD(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.sbx_mortality,self.chbx_ids, self.chbx_offline)
+                SIRD(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.sbx_mortality,self.chbx_ids, self.chbx_offline,self.chbx_HostFire)
 
                 print("SIRD_Simulation()")
                 #show results
@@ -406,7 +427,7 @@ class MyWindow(QMainWindow):
 
 
             elif self.cbx_Virus_Model.currentIndex() == 3:
-                SIS(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.chbx_ids,self.chbx_offline)
+                SIS(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.chbx_ids,self.chbx_offline,self.chbx_HostFire)
 
                 print("SIS_Simulation()")
                 # show results
