@@ -8,13 +8,16 @@
 ## About
 The Computer Virus Spread Visualisation Tool is designed for users who may want to gain an understanding of how a computer virus *could potentially* spread under specified parameters, such as recovery and propagation rates, IDS/IPS status and amount of offline nodes etc.
 
+## Screenshots
+![Screenshot1](https://user-images.githubusercontent.com/29525942/160676660-94e589e8-aea9-4e07-93f9-9fcc4ee7db14.png)
+![Screenshot wide with pin](https://user-images.githubusercontent.com/29525942/160676670-ccd56f0e-5f96-4b51-8b86-8705795ed75e.png)
+
 ## Technology
 The tool is written in python and utilises the following libraries:
 - [PyQT5](https://pypi.org/project/PyQt5/)
 - [NumPy](https://numpy.org/)
 - [Matplotlib](https://matplotlib.org/)
 - [SciPy](https://scipy.org/)
-
 
 
 ## Compartmental Models
@@ -46,8 +49,6 @@ Susceptible ⇢ Infected ⇢ Recovered or Irrecoverable (Deceased)
 ``` 
 Susceptible ⇢ Exposed ⇢ Infected ⇢ Recovered
 ```
-
-## Screenshots
 
 ## Authors
 
