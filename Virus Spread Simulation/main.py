@@ -6,7 +6,7 @@ from PyQt5.QtGui import QPixmap
 import os
 import uuid
 
-from models import SIR, SIRD, SIS, SEIR
+from models import SIR, SIRD, SIS
 
 class Splash(QSplashScreen):
     def __init__(self):
@@ -128,6 +128,7 @@ class Window(QMainWindow):
         #Fig
         self.figure = QtWidgets.QLabel(self)
 
+
         #Me
         self.lbl_MattCaine = QtWidgets.QLabel(self)
 
@@ -143,11 +144,11 @@ class Window(QMainWindow):
 
         #-------------------------------Dev----------------------------------------------
 
-        self.chbx_4 = QtWidgets.QCheckBox("Option 4", self)
+        self.chbx_4 = QtWidgets.QCheckBox("Coming Soon", self)
         #self.chbx_4.setToolTip('This is a tooltip for the QPushButton widget')
-        self.chbx_5 = QtWidgets.QCheckBox("Option 5", self)
+        self.chbx_5 = QtWidgets.QCheckBox("Coming Soon", self)
         #self.chbx_5.setToolTip('This is a tooltip for the QPushButton widget')
-        self.chbx_6 = QtWidgets.QCheckBox("Option 6", self)
+        self.chbx_6 = QtWidgets.QCheckBox("Coming Soon", self)
         #self.chbx_6.setToolTip('This is a tooltip for the QPushButton widget')
 
         self.chbx_4.setEnabled(False)
@@ -209,6 +210,12 @@ class Window(QMainWindow):
         self.cbx_Virus_Model.model().item(2).setEnabled(False)
         self.cbx_Virus_Model.model().item(4).setEnabled(False)
 
+        self.cbx_Virus_Model.model().item(0).setToolTip('Susceptible ⇢ Infected ⇢ Recovered')
+        self.cbx_Virus_Model.model().item(1).setToolTip('Susceptible ⇢ Infected ⇢ Recovered or Irrecoverable (Deceased)')
+        self.cbx_Virus_Model.model().item(2).setToolTip('Susceptible ⇢ Exposed ⇢ Infected ⇢ Recovered')
+        self.cbx_Virus_Model.model().item(3).setToolTip('Susceptible ⇢ Infected ⇢ Susceptible')
+        self.cbx_Virus_Model.model().item(4).setToolTip('Susceptible ⇢ Exposed ⇢ Infected ⇢ Susceptible')
+
 
         self.cbx_Virus_Model.currentTextChanged.connect(self.on_model_combobox_changed)
 
@@ -222,6 +229,9 @@ class Window(QMainWindow):
         self.sbx_healthy.setValue(25000)
         self.sbx_healthy.setSingleStep(100)
 
+        self.sbx_healthy.setToolTip('1 to 1000000')
+
+
         #--------Infected--------#
         self.lbl_infected.setText("Starting Infected")
         self.lbl_infected.move(20, 161)
@@ -232,19 +242,24 @@ class Window(QMainWindow):
         self.sbx_infected.setValue(100)
         self.sbx_infected.setSingleStep(100)
 
+        self.sbx_infected.setToolTip('1 to 1000000')
+
         #--------Iterations--------#
-        self.lbl_days.setText("Days to Show")
+        self.lbl_days.setText("Hours to Show")
         self.lbl_days.move(20, 209)
 
         self.sbx_days.move(19, 233)
-        self.sbx_days.setMinimum(10)
+        self.sbx_days.setMinimum(168)
         self.sbx_days.setMaximum(10001)
-        self.sbx_days.setValue(365)
+        self.sbx_days.setValue(336)
         self.sbx_days.setSingleStep(5)
 
+        self.sbx_days.setToolTip('168 to 10000')
+
         # --------propagation--------#
-        self.lbl_propagation.setText("Propagation Rate %")
-        self.lbl_propagation.move(20, 275)
+        self.lbl_propagation.setText("Propagation Rate")
+        self.lbl_propagation.resize(1000, 20)
+        self.lbl_propagation.move(20, 279)
         self.sbx_propagation.move(19, 299)
 
         self.sbx_propagation.setMinimum(0)
@@ -252,18 +267,22 @@ class Window(QMainWindow):
         self.sbx_propagation.setValue(5)
         self.sbx_propagation.setSingleStep(5)
 
+        self.sbx_propagation.setToolTip('1 to 100')
+
         # --------hibernation--------#
-        self.lbl_hibernation.setText("Hibernation Days")
+        self.lbl_hibernation.setText("Hibernation Hours")
         self.lbl_hibernation.move(20, 323)
         self.sbx_hibernation.move(19, 347)
 
         self.sbx_hibernation.setMinimum(1)
-        self.sbx_hibernation.setMaximum(99999)
+        self.sbx_hibernation.setMaximum(10001)
         self.sbx_hibernation.setValue(0)
         self.sbx_hibernation.setSingleStep(10)
 
+        self.sbx_hibernation.setToolTip('1 to 10000')
+
         # --------r_chance--------#
-        self.lbl_r_chance.setText("Recovery Rate %")
+        self.lbl_r_chance.setText("Recovery Rate")
         self.lbl_r_chance.move(20, 371)
         self.sbx_r_chance.move(19, 395)
 
@@ -272,9 +291,11 @@ class Window(QMainWindow):
         self.sbx_r_chance.setValue(10)
         self.sbx_r_chance.setSingleStep(5)
 
+        self.sbx_r_chance.setToolTip('1 to 100')
+
 
         # --------Mortality--------#
-        self.lbl_mortality.setText("Mortality Rate %")
+        self.lbl_mortality.setText("Irrecoverable Rate")
         self.lbl_mortality.move(20, 419)
         self.sbx_mortality.move(19, 443)
 
@@ -282,6 +303,8 @@ class Window(QMainWindow):
         self.sbx_mortality.setMaximum(100)
         self.sbx_mortality.setValue(5)
         self.sbx_mortality.setSingleStep(5)
+
+        self.sbx_mortality.setToolTip('1 to 100')
 
         # ----------------------------------other Section----------------------------------#
 
@@ -308,11 +331,11 @@ class Window(QMainWindow):
 
         #--------Run Sim Button--------#
         self.btn_simulate.setText("📈 | Simulate")
-
         self.btn_simulate.move(19, 841)
 
         self.btn_simulate.clicked.connect(self.simulate)
-        #self.btn_simulate.clicked.connect(self.progressbar)
+
+        self.btn_simulate.clicked.connect(self.progressbar)
 
     # ----------------------------------Functions----------------------------------#
     # --------Test Button--------#
@@ -322,21 +345,30 @@ class Window(QMainWindow):
 
     # --------Progress--------#
     def progressbar(self):
-        self.completed = 0
-        self.progress.show()
-        self.lbl_MattCaine.hide()
-        while self.completed < 100:
-            self.completed += 0.0002
-            self.progress.setValue(self.completed)
-        self.progress.hide()
-        self.lbl_MattCaine.show()
+        try:
+            self.completed = 0
+            self.progress.show()
+            self.lbl_MattCaine.hide()
+            while self.completed < 100:
+                self.completed += 0.0002
+                self.progress.setValue(self.completed)
+            self.progress.hide()
+            self.lbl_MattCaine.show()
+        except Exception as e:
+            self.msg_box.setText("🛑 {}".format(e))
+            self.msg_box.exec_()
 
+    # ----------ID----------#
     def make_ID(self):
-        self.stamp = str(uuid.uuid4())[:5]
-        self.model_stamp = self.cbx_Virus_Model.currentText()
-        self.c1_model_stamp = self.model_stamp.replace('/', '')
-        self.c2_model_stamp = self.c1_model_stamp.replace('.', '')
-        self.ID_Stamp = str(self.c2_model_stamp + "-" + self.stamp)
+        try:
+            self.stamp = str(uuid.uuid4())[:5]
+            self.model_stamp = self.cbx_Virus_Model.currentText()
+            self.c1_model_stamp = self.model_stamp.replace('/', '')
+            self.c2_model_stamp = self.c1_model_stamp.replace('.', '')
+            self.ID_Stamp = str(self.c2_model_stamp + "-" + self.stamp)
+        except Exception as e:
+            self.msg_box.setText("🛑 {}".format(e))
+            self.msg_box.exec_()
 
     # --------Save--------#
     def Save(self):
@@ -347,7 +379,7 @@ class Window(QMainWindow):
 
             with open('Saved/{}/Parameters.txt'.format(self.c2_model_stamp+"-"+self.stamp), 'w') as f:
                 f.write('ID: {}\nModel: {}\n\nStarting Susceptible: {}\nStarting Infected: {}\n'
-                        'Days Shown: {}\n\nPropagation Rate: {}\nRecovery Rate: {}\nMortality Rate: {}\n'
+                        'Hours Shown: {}\n\nPropagation Rate: {}\nRecovery Rate: {}\nMortality Rate: {}\n'
                         '# Mortality Only Applicable for S.I.R/D\n\n'.format(self.ID_Stamp,self.cbx_Virus_Model.currentText(),self.sbx_healthy.value(),
                                                                                     self.sbx_infected.value(),self.sbx_days.value(),self.sbx_propagation.value(),
                                                                                     self.sbx_r_chance.value(),self.sbx_mortality.value()))
@@ -355,6 +387,7 @@ class Window(QMainWindow):
             self.Save_msg.setText("💾 Saved | Figure & Parameters File created in '/Saved/{}'\n\n𝗜𝗗: {}".format(self.ID_Stamp,self.ID_Stamp))
             self.Save_msg.exec_()
 
+        # Error msg box
         except Exception as e:
             self.msg_box.setText("🛑 Error | {} ".format(e))
             self.msg_box.exec_()
@@ -364,6 +397,7 @@ class Window(QMainWindow):
         if "E" in value:
             self.sbx_hibernation.setDisabled(False)
             self.sbx_mortality.setDisabled(True)
+
         elif "D" in value:
             self.sbx_hibernation.setDisabled(True)
             self.sbx_mortality.setDisabled(False)
@@ -372,15 +406,15 @@ class Window(QMainWindow):
             self.sbx_hibernation.setDisabled(True)
             self.sbx_mortality.setDisabled(True)
 
-    # --------Parameter Reset Button--------#
+    # --------Reset Button--------#
     def reset_parameters(self):
         ret = QMessageBox.question(self, 'Parameter Reset', "🗑️ | Are you sure? This will reset all parameters.",
                                    QMessageBox.Yes | QMessageBox.Cancel, QMessageBox.Cancel)
         if ret == QMessageBox.Yes:
-            self.cbx_Virus_Model.setCurrentIndex(0)
+            #self.cbx_Virus_Model.setCurrentIndex(0)
             self.sbx_healthy.setValue(25000)
             self.sbx_infected.setValue(100)
-            self.sbx_days.setValue(365)
+            self.sbx_days.setValue(336)
             self.sbx_propagation.setValue(5)
             self.sbx_hibernation.setValue(1)
             self.sbx_r_chance.setValue(10)
@@ -390,38 +424,51 @@ class Window(QMainWindow):
             self.chbx_ids.setChecked(False)
             self.chbx_HostFire.setChecked(False)
 
+            # Run Sim again to Clear
             self.simulate()
 
 
-    #-----------------------------------------------------simulate MODELS-----------------------------------------------------#
+    #--------------------------------------------------------------simulate MODELS------------------------------------------------------------------------#
     def simulate(self):
         try:
+            # Make ID for this SIM
             self.make_ID()
+
+            # Set ID in Lbl
             self.lbl_sim_name.setText(self.ID_Stamp)
+
+            # Run Models
+            # SIR
             if self.cbx_Virus_Model.currentIndex() == 0:
-                SIR(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance, self.chbx_ids, self.chbx_offline,self.chbx_HostFire)
-
+                SIR(self.sbx_healthy, self.sbx_infected, self.sbx_days,
+                    self.sbx_propagation, self.sbx_r_chance, self.chbx_ids, self.chbx_offline,self.chbx_HostFire)
+            # SIRD
             elif self.cbx_Virus_Model.currentIndex() == 1:
-                SIRD(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.sbx_mortality,self.chbx_ids, self.chbx_offline,self.chbx_HostFire)
-
+                SIRD(self.sbx_healthy, self.sbx_infected, self.sbx_days,
+                     self.sbx_propagation, self.sbx_r_chance,self.sbx_mortality,self.chbx_ids, self.chbx_offline,self.chbx_HostFire)
+            # SEIR
             elif self.cbx_Virus_Model.currentIndex() == 2:
-                SEIR(self.sbx_healthy, self.sbx_infected, self.sbx_days,self.sbx_hibernation, self.sbx_propagation, self.sbx_r_chance, self.chbx_ids, self.chbx_offline,self.chbx_HostFire)
-
+                print()
+                #SEIR(self.sbx_healthy, self.sbx_infected, self.sbx_days,
+                     #self.sbx_hibernation, self.sbx_propagation, self.sbx_r_chance, self.chbx_ids, self.chbx_offline,self.chbx_HostFire)
+            # SIS
             elif self.cbx_Virus_Model.currentIndex() == 3:
-                SIS(self.sbx_healthy, self.sbx_infected, self.sbx_days, self.sbx_propagation, self.sbx_r_chance,self.chbx_ids,self.chbx_offline,self.chbx_HostFire)
+                SIS(self.sbx_healthy, self.sbx_infected, self.sbx_days,
+                    self.sbx_propagation, self.sbx_r_chance,self.chbx_ids,self.chbx_offline,self.chbx_HostFire)
 
-            # show results
+            # Show Results
             self.Fig_img = QPixmap('fig_temp.png')
             self.figure.setPixmap(self.Fig_img)
             self.figure.resize(self.Fig_img.width(), self.Fig_img.height())
             self.figure.move(145, 80)
 
+        #Error Box
         except Exception as e:
             self.msg_box.setText("🛑 {}".format(e))
             self.msg_box.exec_()
 
 
-# ----------------------------------Window----------------------------------#
+# --------------------------------------------------------------------------Window---------------------------------------------------------------------------#
 def window():
     app = QApplication(sys.argv)
     splash = Splash()
@@ -432,6 +479,5 @@ def window():
     print("[Thunderbirds Are Go!]")
     win.show()
     sys.exit(app.exec_())
-
 window()
 
