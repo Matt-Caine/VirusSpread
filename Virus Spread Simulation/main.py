@@ -15,39 +15,73 @@ class Splash(QSplashScreen):
         qtRectangle = self.frameGeometry()
         centerPoint = QDesktopWidget().availableGeometry().center()
         qtRectangle.moveCenter(centerPoint)
-        self.move(qtRectangle.topLeft())
 
+        self.move(qtRectangle.topLeft())
         label = QtWidgets.QLabel(self)
         pixmap = QPixmap('Splash.png')
+
         label.setPixmap(pixmap)
         self.resize(pixmap.width(), pixmap.height())
 
         qtRectangle = self.frameGeometry()
         centerPoint = QDesktopWidget().availableGeometry().center()
-
         qtRectangle.moveCenter(centerPoint)
         self.move(qtRectangle.topLeft())
+
+
+class SubWindow(QMainWindow):
+    def __init__(self):
+        super(SubWindow, self).__init__()
+
+        self.setWindowTitle("| Computer Virus Spread Visualization 2022 - 📌 Pinned Figure")
+        self.setWindowIcon(QtGui.QIcon('Icon.ico'))
+        self.lbl_MattCaine = QtWidgets.QLabel(self)
+        self.lbl_MattCaine.setText(
+            "*This tool should only be used as an estimate and should not be considered 100% accurate | © Matt Caine - UoP - Comp3000 Project")
+        self.lbl_MattCaine.setGeometry(870, 785, 1000, 20)
+
+        self.figure = QtWidgets.QLabel(self)
+        self.setFixedSize(1530, 810)
+
+        slider = QtWidgets.QSlider(self)
+        slider.setGeometry(15, 690, 25, 100)
+        slider.setRange(65,100)
+        slider.setValue(255)
+
+        self.lbl_WindowOpacity = QtWidgets.QLabel(self)
+        self.lbl_WindowOpacity.setText("𝗢𝗣𝗔𝗖𝗜𝗧𝗬: " + str(slider.value()/100))
+        self.lbl_WindowOpacity.move(5,785)
+
+        slider.valueChanged.connect(lambda: do_action())
+
+        def do_action():
+            # setting text to the label
+            self.lbl_WindowOpacity.setText("𝗢𝗣𝗔𝗖𝗜𝗧𝗬: " + str(slider.value()/100))
+            self.setWindowOpacity(slider.value()/100)
+
 
 class Window(QMainWindow):
     def __init__(self):
         super(Window, self).__init__()
 
-        # ----------------------------------Initialize----------------------------------#
         #Run sim Button
-        self.btn_simulate = QtWidgets.QPushButton(self)
+        self.btn_simulate = QtWidgets.QPushButton("📈 | Simulate",self)
+
+        # pin
+        self.btn_pin = QtWidgets.QPushButton("📌",self)
 
         # Save sim Button
-        self.btn_Save = QtWidgets.QPushButton(self)
+        self.btn_Save = QtWidgets.QPushButton("💾 | Export", self)
 
         # Save msg
         self.Save_msg = QMessageBox()
         self.Save_msg.setWindowIcon(QtGui.QIcon('Icon.ico'))
-        self.Save_msg.setWindowTitle("Computer Virus Spread Visualization 2022")
+        self.Save_msg.setWindowTitle("| Computer Virus Spread Visualization 2022")
 
         #gen use Msg box
         self.msg_box = QMessageBox()
         self.msg_box.setWindowIcon(QtGui.QIcon('Icon.ico'))
-        self.msg_box.setWindowTitle("Computer Virus Spread Visualization 2022")
+        self.msg_box.setWindowTitle("| Computer Virus Spread Visualization 2022")
 
         #progress bar
         self.progress = QtWidgets.QProgressBar(self)
@@ -73,7 +107,7 @@ class Window(QMainWindow):
         self.lbl_sim_name = QtWidgets.QLabel(self)
 
         #Param Reset button
-        self.btn_reset = QtWidgets.QPushButton(self)
+        self.btn_reset = QtWidgets.QPushButton("🗑️ | Reset All",self)
 
         #dropodown
         self.lbl_viruses = QtWidgets.QLabel(self)
@@ -88,6 +122,8 @@ class Window(QMainWindow):
         self.lbl_virus_Header = QtWidgets.QLabel(self)
         self.lbl_simulation_Header = QtWidgets.QLabel(self)
         self.lbl_other_Header = QtWidgets.QLabel(self)
+        self.lbl_settings_Header = QtWidgets.QLabel(self)
+        self.lbl_actions_Header = QtWidgets.QLabel(self)
 
         # propagation_chance group
         self.sbx_propagation = QtWidgets.QSpinBox(self)
@@ -128,7 +164,6 @@ class Window(QMainWindow):
         #Fig
         self.figure = QtWidgets.QLabel(self)
 
-
         #Me
         self.lbl_MattCaine = QtWidgets.QLabel(self)
 
@@ -148,16 +183,14 @@ class Window(QMainWindow):
         #self.chbx_4.setToolTip('This is a tooltip for the QPushButton widget')
         self.chbx_5 = QtWidgets.QCheckBox("Coming Soon", self)
         #self.chbx_5.setToolTip('This is a tooltip for the QPushButton widget')
-        self.chbx_6 = QtWidgets.QCheckBox("Coming Soon", self)
-        #self.chbx_6.setToolTip('This is a tooltip for the QPushButton widget')
 
         self.chbx_4.setEnabled(False)
         self.chbx_5.setEnabled(False)
-        self.chbx_6.setEnabled(False)
+
 
         # Window frame settings
         self.setFixedSize(1700, 900)
-        self.setWindowTitle("Computer Virus Spread Visualization 2022")
+        self.setWindowTitle("| Computer Virus Spread Visualization 2022")
         self.initUI()
         self.simulate()
 
@@ -171,8 +204,7 @@ class Window(QMainWindow):
         self.header.resize(1920, 50)
 
         self.lbl_MattCaine.setText("*This tool should only be used as an estimate and should not be considered 100% accurate || © Matt Caine - UoP - Comp3000 Project")
-
-        self.lbl_MattCaine.setGeometry(1050, 875, 1000, 20)
+        self.lbl_MattCaine.setGeometry(1030, 875, 1000, 20)
 
         self.sbx_hibernation.setDisabled(True)
         self.sbx_mortality.setDisabled(True)
@@ -182,18 +214,19 @@ class Window(QMainWindow):
         self.lbl_simulation_Header.setText("𝗦𝗶𝗺𝘂𝗹𝗮𝘁𝗶𝗼𝗻 𝗜𝗗:")
         self.lbl_simulation_Header.move(145, 50)
 
-        #self.lbl_sim_name.setText("")
-        self.lbl_sim_name.move(220, 50)
-
         self.lbl_Param_Header.setText("𝗚𝗹𝗼𝗯𝗮𝗹 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:")
-        self.lbl_Param_Header.move(16, 50)
+        self.lbl_Param_Header.move(15, 50)
 
         self.lbl_virus_Header.setText("𝗩𝗶𝗿𝘂𝘀 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:")
-        self.lbl_virus_Header.move(16, 260)
+        self.lbl_virus_Header.move(15, 260)
 
         self.lbl_other_Header.setText("𝗠𝗶𝘀𝗰 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:")
-        self.lbl_other_Header.move(16, 470)
+        self.lbl_other_Header.move(15, 470)
 
+        self.lbl_actions_Header.setText("𝗔𝗰𝘁𝗶𝗼𝗻 𝗕𝘂𝘁𝘁𝗼𝗻𝘀:")
+        self.lbl_actions_Header.move(15, 740)
+
+        self.lbl_sim_name.move(220, 50)
 
         #----------------------------------parameter Section----------------------------------#
 
@@ -314,34 +347,47 @@ class Window(QMainWindow):
 
         self.chbx_4.move(19, 550)
         self.chbx_5.move(19, 570)
-        self.chbx_6.move(19, 590)
+
 
         # ----------------------------------SIMSection----------------------------------#
 
         #--------Reset Button--------#
-        self.btn_reset.setText("🗑️ | Reset")
         self.btn_reset.move(19, 769)
         self.btn_reset.clicked.connect(self.reset_parameters)
 
         #--------Save Button--------#
 
-        self.btn_Save.setText("💾 | Export")
         self.btn_Save.move(19, 805)
         self.btn_Save.clicked.connect(self.Save)
 
         #--------Run Sim Button--------#
-        self.btn_simulate.setText("📈 | Simulate")
         self.btn_simulate.move(19, 841)
-
         self.btn_simulate.clicked.connect(self.simulate)
-
         self.btn_simulate.clicked.connect(self.progressbar)
+
+        # --------pin Button--------#
+
+        self.btn_pin.resize(30,30)
+        self.btn_pin.move(120, 841)
+        self.btn_pin.setToolTip("Pins Current Figure into Separate Window")
+
+        # Button Event
+        self.sub_window = SubWindow()
+        self.btn_pin.clicked.connect(self.set_pin)
+        self.btn_pin.clicked.connect(self.sub_window.show)
+
 
     # ----------------------------------Functions----------------------------------#
     # --------Test Button--------#
     @staticmethod
     def Click_test():
         print("Button Clicked")
+
+    def set_pin(self):
+        self.sub_window.Fig_img = QPixmap('fig_temp.png')
+        self.sub_window.figure.setPixmap(self.Fig_img)
+        self.sub_window.figure.resize(self.Fig_img.width(), self.Fig_img.height())
+
 
     # --------Progress--------#
     def progressbar(self):
