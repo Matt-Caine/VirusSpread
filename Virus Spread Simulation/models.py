@@ -8,17 +8,21 @@ plt.style.use('ggplot')
 plt.rcParams['legend.title_fontsize'] = 'x-small'
 
 def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_ids,chbx_offline,chbx_HostFire):
+
     #Starting Susceptible
     N0 = sbx_healthy.value()
+
     # Initial number of infected
     I0 = sbx_infected.value()
+
     #Total Population
     P0 = I0 + N0
+
     # Days to run
     D0 = sbx_days.value()
 
+    # Propagation Rate With Check Box edits
     beta = int(sbx_propagation.value()) / 100
-
     if chbx_ids.isChecked():
         # Contact rate
         beta = (beta * (random.uniform(0.65, 0.75)))
@@ -30,9 +34,7 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
     # recovery rate
     gamma = int(sbx_r_chance.value()) / 1000
 
-
-    #R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.2, 1.8)))
-    # recovered individuals
+    # recovered individuals With Check Box edits
     if chbx_offline.isChecked():
         R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.3, 1.5)))
     else:
@@ -40,8 +42,10 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
     # work out susceptible
     S0 = N0 - I0 - R0
+
     # A grid of time points (in days)
     t = np.linspace(0, D0, D0)
+
     # The SIR model differential equations
     def deriv(y, t, N0, beta, gamma):
         S, I, R = y
@@ -49,8 +53,10 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         dIdt = (beta * S * I) / N0 - (gamma * I)
         dRdt = gamma * I
         return dSdt, dIdt, dRdt
+
     # Initial conditions vector
     y0 = S0, I0, R0
+
     # Integrate the SIR equations over the time grid, t.
     ret = odeint(deriv, y0, t, args=(N0, beta, gamma))
     S, I, R = ret.T
@@ -74,7 +80,7 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
         axs[0, 0].axvline(I.argmax(axis=0), linestyle=':', color='silver')
 
-        axs[0, 0].text(I.argmax(axis=0) + 5, np.amax(I)+10, 'Peak Infected\nDay: {}'.format(int((I.argmax(axis=0)/24))), color='black')
+        axs[0, 0].text(I.argmax(axis=0) + 3, np.amax(N0*0.15), 'Peak Infected By Hour: {}'.format(int((I.argmax(axis=0)))), color='black',rotation=90)
 
         legend = axs[0, 0].legend()
         legend.get_frame().set_alpha(0.5)
@@ -277,8 +283,8 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
         legend.get_frame().set_alpha(0.5)
 
         axs[0, 0].axvline(I.argmax(axis=0), linestyle=':', color='silver')
-        axs[0, 0].text(I.argmax(axis=0) + 5, np.amax(I) + 10, 'Peak Infected\nDay: {}'.format(int((I.argmax(axis=0)/24))),
-                       color='black')
+        axs[0, 0].text(I.argmax(axis=0) + 3, np.amax(N0 * 0.15),
+                       'Peak Infected By Hour: {}'.format(int((I.argmax(axis=0)))), color='black', rotation=90)
 
         axs[0, 0].spines['bottom'].set_color('black')
         axs[0, 0].spines['left'].set_color('black')
@@ -470,7 +476,8 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         axs[0, 0].spines['left'].set_color('black')
 
         axs[0, 0].axvline(I.argmax(axis=0), linestyle=':', color='silver')
-        axs[0, 0].text(I.argmax(axis=0) + 5, np.amax(I) + 10, 'Peak Infected\nDay: {}'.format(int((I.argmax(axis=0)/24))),color='black')
+        axs[0, 0].text(I.argmax(axis=0) + 3, np.amax(N0 * 0.15),
+                       'Peak Infected By Hour: {}'.format(int((I.argmax(axis=0)))), color='black', rotation=90)
 
 
         for spine in ('top', 'right'):

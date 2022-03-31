@@ -6,84 +6,97 @@ from PyQt5.QtGui import QPixmap
 import os
 import uuid
 
+# My Models Lib
 from models import SIR, SIRD, SIS
 
 class Splash(QSplashScreen):
     def __init__(self):
         super(Splash, self).__init__()
-
+        # Window--------------------------------------------------------#
         qtRectangle = self.frameGeometry()
         centerPoint = QDesktopWidget().availableGeometry().center()
         qtRectangle.moveCenter(centerPoint)
-
         self.move(qtRectangle.topLeft())
+
+        # Splash Image--------------------------------------------------#
         label = QtWidgets.QLabel(self)
         pixmap = QPixmap('Splash.png')
-
         label.setPixmap(pixmap)
         self.resize(pixmap.width(), pixmap.height())
 
+        # Centre Window-------------------------------------------------#
         qtRectangle = self.frameGeometry()
         centerPoint = QDesktopWidget().availableGeometry().center()
         qtRectangle.moveCenter(centerPoint)
         self.move(qtRectangle.topLeft())
 
+        # Console Out--------------------------------------------------#
+        print("[Splash]")
 
-class SubWindow(QMainWindow):
+
+        # END----------------------------------------------------------#
+
+class Disclaimer(QMainWindow):
     def __init__(self):
-        super(SubWindow, self).__init__()
+        super(Disclaimer, self).__init__()
+        # MSG BOX--------------------------------------------------------#
+        self.disclaimer = QMessageBox()
+        self.disclaimer.setIcon(QMessageBox.Warning)
 
-        self.setWindowTitle("| Computer Virus Spread Visualization 2022 - 📌 Pinned Figure")
-        self.setWindowIcon(QtGui.QIcon('Icon.ico'))
-        self.lbl_MattCaine = QtWidgets.QLabel(self)
-        self.lbl_MattCaine.setText(
-            "*This tool should only be used as an estimate and should not be considered 100% accurate | © Matt Caine - UoP - Comp3000 Project")
-        self.lbl_MattCaine.setGeometry(870, 785, 1000, 20)
+        # Default Answers-------------------------------------------------#
+        self.disclaimer.setDefaultButton(self.disclaimer.Yes)
+        self.disclaimer.setEscapeButton(self.disclaimer.Abort)
 
-        self.figure = QtWidgets.QLabel(self)
-        self.setFixedSize(1530, 810)
+        # Console Out 1 --------------------------------------------------#
+        print("[Disclaimer]")
 
-        slider = QtWidgets.QSlider(self)
-        slider.setGeometry(15, 690, 25, 100)
-        slider.setRange(65,100)
-        slider.setValue(255)
+        # MSG BOX Set - ---------------------------------------------------#
+        disclaimer_answer = self.disclaimer.question(self, "| Computer Virus Spread Visualization 2022 Disclaimer",
+                                                     "𝗗𝗶𝘀𝗰𝗹𝗮𝗶𝗺𝗲𝗿:\nThe developer of Computer Virus Spread Visualization 2022 cannot be held responsible for your use of the information provided. "
+                                                     "This tool should only be used as an estimate and should not be considered 100% accurate. "
+                                                     "\n\n𝗗𝗼 𝘆𝗼𝘂 𝘂𝗻𝗱𝗲𝗿𝘀𝘁𝗮𝗻𝗱? \n",
+                                                     self.disclaimer.Yes | self.disclaimer.Abort)
 
-        self.lbl_WindowOpacity = QtWidgets.QLabel(self)
-        self.lbl_WindowOpacity.setText("𝗢𝗣𝗔𝗖𝗜𝗧𝗬: " + str(slider.value()/100))
-        self.lbl_WindowOpacity.move(5,785)
+        # Answer + Console Out 2 -----------------------------------------#
+        if disclaimer_answer == self.disclaimer.Abort:
+            print(" - Disclaimer Abort\n[Quit]")
+            quit()
+        else:
+            print(" - Disclaimer OK")
 
-        slider.valueChanged.connect(lambda: do_action())
-
-        def do_action():
-            # setting text to the label
-            self.lbl_WindowOpacity.setText("𝗢𝗣𝗔𝗖𝗜𝗧𝗬: " + str(slider.value()/100))
-            self.setWindowOpacity(slider.value()/100)
-
+        # END------------------------------------------------------------#
 
 class Window(QMainWindow):
     def __init__(self):
         super(Window, self).__init__()
 
-        #Run sim Button
+        # Widgets ----------------------------------------------------------------#
+        # Sim Button
         self.btn_simulate = QtWidgets.QPushButton("📈 | Simulate",self)
 
-        # pin
+        # Pin Button
         self.btn_pin = QtWidgets.QPushButton("📌",self)
 
-        # Save sim Button
+        # Folder Button
+        self.btn_folder = QtWidgets.QPushButton("📁", self)
+
+        # Undo Button
+        self.btn_undo = QtWidgets.QPushButton("🔙", self)
+
+        # Save Button
         self.btn_Save = QtWidgets.QPushButton("💾 | Export", self)
 
-        # Save msg
+        # Save msg Box
         self.Save_msg = QMessageBox()
         self.Save_msg.setWindowIcon(QtGui.QIcon('Icon.ico'))
         self.Save_msg.setWindowTitle("| Computer Virus Spread Visualization 2022")
 
-        #gen use Msg box
+        # Gen use Msg box
         self.msg_box = QMessageBox()
         self.msg_box.setWindowIcon(QtGui.QIcon('Icon.ico'))
         self.msg_box.setWindowTitle("| Computer Virus Spread Visualization 2022")
 
-        #progress bar
+        # Progress bar
         self.progress = QtWidgets.QProgressBar(self)
         self.progress.setGeometry(2, 878, 1698, 16)
         Bar_STYLE = """
@@ -93,7 +106,6 @@ class Window(QMainWindow):
             bar.setFormat("% p")
             text-align: center
         }
-
         QProgressBar::chunk {
             background-color: #2CA02C;
             width: 10px;
@@ -110,12 +122,7 @@ class Window(QMainWindow):
         self.btn_reset = QtWidgets.QPushButton("🗑️ | Reset All",self)
 
         #dropodown
-        self.lbl_viruses = QtWidgets.QLabel(self)
         self.cbx_viruses = QtWidgets.QComboBox(self)
-
-        # name
-        self.inp_name = QtWidgets.QLineEdit(self)
-        self.lbl_name = QtWidgets.QLabel(self)
 
         # Header
         self.lbl_Param_Header = QtWidgets.QLabel(self)
@@ -154,7 +161,7 @@ class Window(QMainWindow):
         self.lbl_healthy = QtWidgets.QLabel(self)
 
         # Virus Model
-        self.lbl_Virus_Model = QtWidgets.QLabel(self)
+        self.lbl_Virus_Model = QtWidgets.QLabel("Virus Model",self)
         self.cbx_Virus_Model = QtWidgets.QComboBox(self)
 
         # Header Img
@@ -163,6 +170,7 @@ class Window(QMainWindow):
 
         #Fig
         self.figure = QtWidgets.QLabel(self)
+        self.figure.setEnabled(True)
 
         #Me
         self.lbl_MattCaine = QtWidgets.QLabel(self)
@@ -184,9 +192,9 @@ class Window(QMainWindow):
         self.chbx_5 = QtWidgets.QCheckBox("Coming Soon", self)
         #self.chbx_5.setToolTip('This is a tooltip for the QPushButton widget')
 
+        # Disable buttons
         self.chbx_4.setEnabled(False)
         self.chbx_5.setEnabled(False)
-
 
         # Window frame settings
         self.setFixedSize(1700, 900)
@@ -195,6 +203,11 @@ class Window(QMainWindow):
         self.simulate()
 
     def initUI(self):
+
+        qtRectangle = self.frameGeometry()
+        centerPoint = QDesktopWidget().availableGeometry().center()
+        qtRectangle.moveCenter(centerPoint)
+        self.move(qtRectangle.topLeft())
 
         #window Icon
         self.setWindowIcon(QtGui.QIcon('Icon.ico'))
@@ -231,11 +244,10 @@ class Window(QMainWindow):
         #----------------------------------parameter Section----------------------------------#
 
         #--------Virus Model--------#
-        self.lbl_Virus_Model.setText("Virus Model")
         self.lbl_Virus_Model.move(20, 65)
 
         #✅❌
-        self.cbx_Virus_Model.addItems(["S.I.R","S.I.R/D", "S.E.I.R", "S.I.S","S.E.I.S"])
+        self.cbx_Virus_Model.addItems(["S.I.R","S.I.R/D", "❌ S.E.I.R", "S.I.S","❌ S.E.I.S"])
 
         self.cbx_Virus_Model.setGeometry(19, 90, 100, 25)
 
@@ -278,7 +290,7 @@ class Window(QMainWindow):
         self.sbx_infected.setToolTip('1 to 1000000')
 
         #--------Iterations--------#
-        self.lbl_days.setText("Hours to Show")
+        self.lbl_days.setText("Hours | 168<")
         self.lbl_days.move(20, 209)
 
         self.sbx_days.move(19, 233)
@@ -303,7 +315,7 @@ class Window(QMainWindow):
         self.sbx_propagation.setToolTip('1 to 100')
 
         # --------hibernation--------#
-        self.lbl_hibernation.setText("Hibernation Hours")
+        self.lbl_hibernation.setText("Hibernation Time")
         self.lbl_hibernation.move(20, 323)
         self.sbx_hibernation.move(19, 347)
 
@@ -325,7 +337,6 @@ class Window(QMainWindow):
         self.sbx_r_chance.setSingleStep(5)
 
         self.sbx_r_chance.setToolTip('1 to 100')
-
 
         # --------Mortality--------#
         self.lbl_mortality.setText("Irrecoverable Rate")
@@ -355,10 +366,26 @@ class Window(QMainWindow):
         self.btn_reset.move(19, 769)
         self.btn_reset.clicked.connect(self.reset_parameters)
 
+        # --------Reset Button--------#
+        self.btn_undo.resize(30, 30)
+        self.btn_undo.move(120, 769)
+        self.btn_undo.setEnabled(False)
+
+        self.btn_undo.setToolTip("Undo Reset | Coming Soon...")
+
+
         #--------Save Button--------#
 
         self.btn_Save.move(19, 805)
         self.btn_Save.clicked.connect(self.Save)
+
+        # --------Open folder Button--------#
+        self.btn_folder.resize(30, 30)
+        self.btn_folder.move(120, 805)
+        self.btn_folder.setEnabled(False)
+
+        self.btn_folder.setToolTip("Open Export Folder | Coming Soon...")
+
 
         #--------Run Sim Button--------#
         self.btn_simulate.move(19, 841)
@@ -383,10 +410,15 @@ class Window(QMainWindow):
     def Click_test():
         print("Button Clicked")
 
+
     def set_pin(self):
-        self.sub_window.Fig_img = QPixmap('fig_temp.png')
-        self.sub_window.figure.setPixmap(self.Fig_img)
-        self.sub_window.figure.resize(self.Fig_img.width(), self.Fig_img.height())
+        try:
+            self.sub_window.Fig_img = QPixmap('fig_temp.png')
+            self.sub_window.figure.setPixmap(self.Fig_img)
+            self.sub_window.figure.resize(self.Fig_img.width(), self.Fig_img.height())
+        except Exception as e:
+            self.msg_box.setText("🛑 Error | {} ".format(e))
+            self.msg_box.exec_()
 
 
     # --------Progress--------#
@@ -396,7 +428,7 @@ class Window(QMainWindow):
             self.progress.show()
             self.lbl_MattCaine.hide()
             while self.completed < 100:
-                self.completed += 0.0002
+                self.completed += 0.0005
                 self.progress.setValue(self.completed)
             self.progress.hide()
             self.lbl_MattCaine.show()
@@ -419,6 +451,7 @@ class Window(QMainWindow):
     # --------Save--------#
     def Save(self):
         try:
+            self.figure.setEnabled(False)
             os.mkdir('Saved/{}'.format(self.ID_Stamp))
             self.img = QPixmap('fig_temp.png')
             self.img.save('Saved/{}/Figure.png'.format(self.ID_Stamp))
@@ -432,11 +465,13 @@ class Window(QMainWindow):
             #show saved box
             self.Save_msg.setText("💾 Saved | Figure & Parameters File created in '/Saved/{}'\n\n𝗜𝗗: {}".format(self.ID_Stamp,self.ID_Stamp))
             self.Save_msg.exec_()
+            self.figure.setEnabled(True)
 
         # Error msg box
         except Exception as e:
             self.msg_box.setText("🛑 Error | {} ".format(e))
             self.msg_box.exec_()
+            self.figure.setEnabled(True)
 
     # --------model locks--------#
     def on_model_combobox_changed(self, value):
@@ -454,6 +489,7 @@ class Window(QMainWindow):
 
     # --------Reset Button--------#
     def reset_parameters(self):
+        self.figure.setEnabled(False)
         ret = QMessageBox.question(self, 'Parameter Reset', "🗑️ | Are you sure? This will reset all parameters.",
                                    QMessageBox.Yes | QMessageBox.Cancel, QMessageBox.Cancel)
         if ret == QMessageBox.Yes:
@@ -472,6 +508,9 @@ class Window(QMainWindow):
 
             # Run Sim again to Clear
             self.simulate()
+            self.figure.setEnabled(True)
+        else:
+            self.figure.setEnabled(True)
 
 
     #--------------------------------------------------------------simulate MODELS------------------------------------------------------------------------#
@@ -508,21 +547,55 @@ class Window(QMainWindow):
             self.figure.resize(self.Fig_img.width(), self.Fig_img.height())
             self.figure.move(145, 80)
 
+
         #Error Box
         except Exception as e:
             self.msg_box.setText("🛑 {}".format(e))
             self.msg_box.exec_()
 
+class SubWindow(QMainWindow):
+    def __init__(self):
+        super(SubWindow, self).__init__()
+        # Window--------------------------------------------------------#
+        self.setWindowTitle("| Computer Virus Spread Visualization 2022 - 📌 Pinned Figure")
+        self.setWindowIcon(QtGui.QIcon('Icon.ico'))
+        self.lbl_MattCaine = QtWidgets.QLabel(self)
+        self.lbl_MattCaine.setText("*This tool should only be used as an estimate and should not be considered "
+                                   "100% accurate | © Matt Caine - UoP - Comp3000 Project")
+        self.lbl_MattCaine.setGeometry(870, 785, 1000, 20)
 
-# --------------------------------------------------------------------------Window---------------------------------------------------------------------------#
+        # Grab and set Image --------------------------------------------------#
+        self.figure = QtWidgets.QLabel(self)
+        self.setFixedSize(1530, 810)
+
+        # Opacity Slider --------------------------------------------------#
+        slider = QtWidgets.QSlider(self)
+        slider.setGeometry(15, 690, 25, 100)
+        slider.setRange(65,100)
+        slider.setValue(355)
+        self.lbl_WindowOpacity = QtWidgets.QLabel(self)
+        self.lbl_WindowOpacity.setText("𝗢𝗣𝗔𝗖𝗜𝗧𝗬: " + str(slider.value()/100))
+        self.lbl_WindowOpacity.move(5,785)
+        slider.valueChanged.connect(lambda: do_action())
+        def do_action():
+            # setting text to the label
+            self.lbl_WindowOpacity.setText("𝗢𝗣𝗔𝗖𝗜𝗧𝗬: " + str(slider.value()/100))
+            self.setWindowOpacity(slider.value()/100)
+
+
+        # END----------------------------------------------------------#
+
+# --------------Window Order--------------#
 def window():
+    print("[Start]")
     app = QApplication(sys.argv)
-    splash = Splash()
     win = Window()
+    splash = Splash()
     splash.show()
     time.sleep(1)
+    Disclaimer()
     splash.hide()
-    print("[Thunderbirds Are Go!]")
+    print("[Show]")
     win.show()
     sys.exit(app.exec_())
 window()
