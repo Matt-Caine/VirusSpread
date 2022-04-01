@@ -43,6 +43,9 @@ class Disclaimer(QMainWindow):
         self.disclaimer = QMessageBox()
         self.disclaimer.setIcon(QMessageBox.Warning)
 
+        self.disclaimer.setWindowIcon(QtGui.QIcon('Icon.ico'))
+
+
         # Default Answers-------------------------------------------------#
         self.disclaimer.setDefaultButton(self.disclaimer.Yes)
         self.disclaimer.setEscapeButton(self.disclaimer.Abort)
@@ -534,8 +537,7 @@ class Window(QMainWindow):
             # SEIR
             elif self.cbx_Virus_Model.currentIndex() == 2:
                 print()
-                #SEIR(self.sbx_healthy, self.sbx_infected, self.sbx_days,
-                     #self.sbx_hibernation, self.sbx_propagation, self.sbx_r_chance, self.chbx_ids, self.chbx_offline,self.chbx_HostFire)
+
             # SIS
             elif self.cbx_Virus_Model.currentIndex() == 3:
                 SIS(self.sbx_healthy, self.sbx_infected, self.sbx_days,
@@ -592,10 +594,10 @@ def window():
     win = Window()
     splash = Splash()
     splash.show()
-    time.sleep(1)
+    time.sleep(1.5)
     Disclaimer()
     splash.hide()
-    print("[Show]")
+    print("[Execute Main Window]")
     win.show()
     sys.exit(app.exec_())
 window()
