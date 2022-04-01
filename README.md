@@ -9,11 +9,8 @@
 The Computer Virus Spread Visualisation Tool is designed for users who may want to gain an understanding of how a computer virus *could potentially* spread under specified parameters, such as recovery and propagation rates, IDS/IPS status and amount of offline nodes etc.
 
 ## Screenshots
-![Screenshot](https://user-images.githubusercontent.com/29525942/161323130-7dd4b9d2-e1f6-45a7-8f98-835bc439dc86.png)
-<h6 align="center">Main Window.</h6>
-![Progress 4](https://user-images.githubusercontent.com/29525942/161323158-3dcd4b1c-f9e4-4496-93dc-64699aeb275c.png)
-<h6 align="center">Main Window With Comparison Window Open.</h6>
-
+![Main Window](https://github.com/Matt-Caine/VirusSpread/blob/main/Documents/Screenshots/Screenshot.png)
+![Main Window With Comparison Window Open](https://github.com/Matt-Caine/VirusSpread/blob/main/Documents/Screenshots/Progress%204.png)
 
 ## Technology
 The tool is written in python and utilises the following libraries:
