@@ -9,19 +9,19 @@ plt.rcParams['legend.title_fontsize'] = 'x-small'
 
 def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_ids,chbx_offline,chbx_HostFire):
 
-    #Starting Susceptible
+    #Starting Susceptible ----------------------------------------------------#
     N0 = sbx_healthy.value()
 
-    # Initial number of infected
+    # Initial number of infected ---------------------------------------------#
     I0 = sbx_infected.value()
 
-    #Total Population
+    #Total Population --------------------------------------------------------#
     P0 = I0 + N0
 
-    # Days to run
+    # Days to run ------------------------------------------------------------#
     D0 = sbx_days.value()
 
-    # Propagation Rate With Check Box edits
+    # Propagation Rate With Check Box edits ----------------------------------#
     beta = int(sbx_propagation.value()) / 100
     if chbx_ids.isChecked():
         # Contact rate
@@ -31,22 +31,22 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         # Contact rate
         beta = (beta * (random.uniform(0.65, 0.75)))
 
-    # recovery rate
+    # recovery rate --------------------------------------------------------#
     gamma = int(sbx_r_chance.value()) / 1000
 
-    # recovered individuals With Check Box edits
+    # Recovered individuals With Check Box edits
     if chbx_offline.isChecked():
         R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.3, 1.5)))
     else:
         R0 = 0
 
-    # work out susceptible
+    # work out susceptible --------------------------------------------------#
     S0 = N0 - I0 - R0
 
-    # A grid of time points (in days)
+    # A grid of time points -------------------------------------------------#
     t = np.linspace(0, D0, D0)
 
-    # The SIR model differential equations
+    # The SIR model differential equations ----------------------------------#
     def deriv(y, t, N0, beta, gamma):
         S, I, R = y
         dSdt = -(beta * S * I / N0)
@@ -54,32 +54,27 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         dRdt = gamma * I
         return dSdt, dIdt, dRdt
 
-    # Initial conditions vector
+    # Initial conditions vector ---------------------------------------------#
     y0 = S0, I0, R0
-
     # Integrate the SIR equations over the time grid, t.
     ret = odeint(deriv, y0, t, args=(N0, beta, gamma))
     S, I, R = ret.T
 
-    # ------------------------------------GRAPHS----------------------------#
+    # --------------------------------------------------------GRAPHS-------------------------------------------------------------#
 
-    # Plot the data
+    # Plot the data ---------------------------------------------------------#
     fig, axs = plt.subplots(2, 2,figsize=(15.3, 7.9))
 
-    # TOP LEFT plot---------------------------------------------------------
+    # TOP LEFT plot ---------------------------------------------------------#
     axs[0, 0].set_title("Timeline Overview",fontweight="bold")
     try:
-
         plt.setp(axs[0, 0], xlabel="Time (Hours)")
         plt.setp(axs[0, 0], ylabel="Total Susceptible Devices")
         axs[0, 0].grid()
-
         axs[0, 0].plot(t, S, label='Unaffected Devices', color='tab:blue')
         axs[0, 0].plot(t, I, linestyle='--', label='Infected', color='tab:orange')
         axs[0, 0].plot(t, R, label='Recovered & Protected', color='tab:green')
-
         axs[0, 0].axvline(I.argmax(axis=0), linestyle=':', color='silver')
-
         axs[0, 0].text(I.argmax(axis=0) + 3, np.amax(N0*0.15), 'Peak Infected By Hour: {}'.format(int((I.argmax(axis=0)))), color='black',rotation=90)
 
         legend = axs[0, 0].legend()
@@ -89,69 +84,55 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
         axs[0, 0].spines['bottom'].set_color('black')
         axs[0, 0].spines['left'].set_color('black')
+        axs[0, 0].legend(['Unaffected', 'Infected', 'Recovered and Protected'], loc='best',ncol=1, fancybox=True)
 
-        axs[0, 0].legend(['Unaffected', 'Infected', 'Recovered and Protected'], loc='best',
-                         ncol=1, fancybox=True)
     except Exception as e:
         print(e)
 
-    # TOP Right plot---------------------------------------------------------
+    # TOP Right plot  ---------------------------------------------------------#
     axs[0, 1].set_title("Status Distribution on Day {}".format(int(D0/24)), fontweight="bold")
     try:
-
         labels = 'Unaffected', 'Infected', 'Recovered and Protected'
         colors = ['tab:blue', 'tab:orange', 'tab:green']
-
         sizes = [S[-1] / P0 * 100, I[-1] / P0 * 100, R[-1] / P0 * 100]
         labels = [f'{l} | {s:0.1f}%' for l, s in zip(labels, sizes)]
 
         axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': '#f0f0f0'},
                       pctdistance=0.8, labeldistance=1.07, startangle=90, colors=colors)
-
         axs[0, 1].legend(labels, loc="best")
-
         axs[0, 1].axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
 
     except Exception as e:
         print(e)
 
-    # Bottom Right plot---------------------------------------------------------
-
+    # Bottom Right plot  ---------------------------------------------------------#
     axs[1, 1].set_title("Change in Infected Per Hour".format(D0), fontweight="bold")
     try:
         axs[1, 1].grid()
-
         IDiff = np.diff(I)
-
         upper = 1
         lower = -1
 
         Iupper = np.ma.masked_where(IDiff < upper, IDiff)
-
         Ilower = np.ma.masked_where(IDiff > lower, IDiff)
 
         axs[1, 1].plot(np.delete(t, 0), Iupper, color='crimson')
         axs[1, 1].axhline(0, linestyle=':', color='silver')
         axs[1, 1].plot(np.delete(t, 0), Ilower, color='tab:green')
-
-        axs[1, 1].legend(['Increasing Infected','Zero Change','Decreasing  Infected'], loc='best',
-                         ncol=1, fancybox=True)
-
+        axs[1, 1].legend(['Increasing Infected','Zero Change','Decreasing  Infected'], loc='best',ncol=1, fancybox=True)
 
         plt.setp(axs[1, 1], xlabel="Time (Hours)")
         plt.setp(axs[1, 1], ylabel="Change in Infected")
 
         axs[1, 1].spines['bottom'].set_color('black')
         axs[1, 1].spines['left'].set_color('black')
-
         for spine in ('top', 'right'):
             axs[1, 1].spines[spine].set_visible(False)
 
     except Exception as e:
         print(e)
 
-    # Bottom Left plot----------------------------------------------------------
+    # Bottom Left plot  ---------------------------------------------------------#
     try:
         axs[1, 0].set_title("Total Infections Per Hour", fontweight="bold")
         axs[1, 0].grid()
@@ -172,46 +153,44 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
         z = np.polyfit(t, I, 1)
         p = np.poly1d(z)
+
         axs[1, 0].plot(t, p(t), color='silver',linestyle='-.')
-
-        axs[1, 0].legend(['>50%','25%-50%','0-25%','Trendline'], loc='best',
-                         ncol=1, fancybox=True,title='% of Susceptible Infected')
-
+        axs[1, 0].legend(['>50%','25%-50%','0-25%','Trendline'], loc='best',ncol=1, fancybox=True,title='% of Susceptible Infected')
         axs[1, 0].spines['bottom'].set_color('black')
         axs[1, 0].spines['left'].set_color('black')
-
-
         axs[1, 0].axhline(N0 / 2, linestyle=':', color='silver')
         axs[1, 0].axhline(N0 / 4, linestyle=':', color='silver')
-
 
         for spine in ('top', 'right'):
             axs[1, 0].spines[spine].set_visible(False)
 
+
     except Exception as e:
         print(e)
 
-    # --------------------------------------------------------------------------------------------------------------------
+    # Show ---------------------------------------------------------#
 
     plt.tight_layout()
     plt.savefig("fig_temp.png",transparent=True)
     plt.close('all')
 
-def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_mortality,chbx_ids,chbx_offline,chbx_HostFire):
+    # END----------------------------------------------------------#
 
-    #Starting Susceptible
+def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_mortality,chbx_ids,chbx_offline,chbx_HostFire):
+    # Starting Susceptible ----------------------------------------------------#
     N0 = sbx_healthy.value()
-    # Initial number of infected
+
+    # Initial number of infected ---------------------------------------------#
     I0 = sbx_infected.value()
 
-    # Total Population
+    # Total Population --------------------------------------------------------#
     P0 = I0 + N0
 
-    # Days to run
+    # Days to run ------------------------------------------------------------#
     D0 = sbx_days.value()
 
+    # Propagation Rate With Check Box edits ----------------------------------#
     beta = int(sbx_propagation.value()) / 100
-
     beta = int(sbx_propagation.value()) / 100
     if chbx_ids.isChecked():
         # Contact rate
@@ -221,26 +200,28 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
         # Contact rate
         beta = (beta * (random.uniform(0.65, 0.75)))
 
+    # recovery rate --------------------------------------------------------#
+    gamma = int(sbx_r_chance.value()) / 1000
+
     # recovered individuals (random.uniform(1.3, 1.8)
     if chbx_offline.isChecked():
         R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.3, 1.5)))
     else:
         R0 = 0
 
-    # recovery rate
-    gamma = int(sbx_r_chance.value()) / 1000
-
-    #mortality
+    # mortality ------------------------------------------------------------#
     mu = int(sbx_mortality.value()) / 1000
 
-
-    # start Dead individuals
+    # start Dead individuals -----------------------------------------------#
     Dd0 = 0
-    # work out susceptible
+
+    # work out susceptible --------------------------------------------------#
     S0 = N0 - I0 - R0
-    # A grid of time points (in days)
+
+    # A grid of time points -------------------------------------------------#
     t = np.linspace(0, D0, D0)
 
+    # The SIRD model differential equations ---------------------------------#
     def deriv(y, t, N0, beta, gamma,mu):
         S, I, R, D = y
         dSdt = -(beta * S * I) / N0
@@ -249,31 +230,23 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
         dDdt = mu * I
         return dSdt, dIdt, dRdt, dDdt
 
-
-    # Initial conditions vector
+    # Initial conditions vector ---------------------------------------------#
     y0 = S0, I0, R0, Dd0
     # Integrate the SIRD equations over the time grid, t.
-
     ret = odeint(deriv, y0, t, args=(N0, beta, gamma, mu))
     S, I, R, D = ret.T
 
-
-    # ------------------------------------GRAPHS----------------------------#
+    # --------------------------------------------------------GRAPHS-------------------------------------------------------------#
 
     # Plot the data
     fig, axs = plt.subplots(2, 2,figsize=(15.3, 7.9))
 
-
-    # TOP LEFT plot---------------------------------------------------------
+    # TOP LEFT plot ---------------------------------------------------------#
     axs[0, 0].set_title("Timeline Overview",fontweight="bold")
     try:
-
         plt.setp(axs[0, 0], xlabel="Time (Hours)")
         plt.setp(axs[0, 0], ylabel="Total Susceptible Devices")
         axs[0, 0].grid()
-
-
-
         axs[0, 0].plot(t, S, label='Unaffected', color='tab:blue')
         axs[0, 0].plot(t, I, linestyle='--', label='Infected', color='tab:orange')
         axs[0, 0].plot(t, R, label='Recovered & protected', color='tab:green')
@@ -294,39 +267,33 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
 
         axs[0, 0].legend(['Unaffected', 'Infected', 'Recovered and Protected','Irrecoverable'], loc='best',
                          ncol=1, fancybox=True)
+
     except Exception as e:
         print(e)
 
-    # TOP Right plot---------------------------------------------------------
+    # TOP Right plot  ---------------------------------------------------------#
     axs[0, 1].set_title("Status Distribution on Day {}".format(int(D0/24)), fontweight="bold")
     try:
-
         labels = 'Unaffected', 'Infected', 'Recovered and Protected', 'Irrecoverable'
         colors = ['tab:blue', 'tab:orange', 'tab:green','crimson']
-
-
         sizes = [S[-1] / P0 * 100, I[-1] / P0 * 100, R[-1] / P0 * 100, D[-1]/N0*100]
-
         labels = [f'{l} | {s:0.1f}%' for l, s in zip(labels, sizes)]
-
 
         axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': '#f0f0f0'},
                       pctdistance=0.8, labeldistance=1.07, startangle=90, colors=colors)
 
         axs[0, 1].legend(labels, loc="best")
-
         axs[0, 1].axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
     except Exception as e:
         print(e)
 
-    # Bottom Right plot---------------------------------------------------------
+    # Bottom Right plot  ---------------------------------------------------------#
 
     axs[1, 1].set_title("Change in Infected Per Hour".format(D0), fontweight="bold")
     try:
         axs[1, 1].grid()
-
         IDiff = np.diff(I)
-
         upper = 1
         lower = -1
 
@@ -334,11 +301,8 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
         Ilower = np.ma.masked_where(IDiff > lower, IDiff)
 
         axs[1, 1].plot(np.delete(t, 0), Iupper, color='crimson')
-
         axs[1, 1].axhline(0, linestyle=':', color='silver')
-
         axs[1, 1].plot(np.delete(t, 0), Ilower, color='tab:green')
-
         axs[1, 1].legend(['Increasing Infected', 'Zero Change', 'Decreasing  Infected'], loc='best',
                          ncol=1, fancybox=True)
 
@@ -354,10 +318,7 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
     except Exception as e:
         print(e)
 
-    except Exception as e:
-        print(e)
-    # Bottom Left plot----------------------------------------------------------
-
+    # Bottom Left plot  ---------------------------------------------------------#
     try:
         axs[1, 0].set_title("Total Infections Per Hour", fontweight="bold")
         axs[1, 0].grid()
@@ -381,18 +342,11 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
         p = np.poly1d(z)
         axs[1, 0].plot(t, p(t), color='silver',linestyle='-.')
 
-        axs[1, 0].legend(['>50%','25%-50%','0-25%','Trendline'], loc='best',
-                         ncol=1, fancybox=True,title='% of Susceptible Infected')
-
+        axs[1, 0].legend(['>50%','25%-50%','0-25%','Trendline'], loc='best',ncol=1, fancybox=True,title='% of Susceptible Infected')
         axs[1, 0].spines['bottom'].set_color('black')
         axs[1, 0].spines['left'].set_color('black')
-
-        #axs[1, 0].plot(t, N0 / 2, linestyle='--', color='silver')
-        #axs[1, 0].plot(t, N0 / 4, linestyle='--', color='silver')
-
         axs[1, 0].axhline(N0 / 2, linestyle=':', color='silver')
         axs[1, 0].axhline(N0 / 4, linestyle=':', color='silver')
-
 
         for spine in ('top', 'right'):
             axs[1, 0].spines[spine].set_visible(False)
@@ -401,23 +355,27 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
         print(e)
 
 
-    # --------------------------------------------------------------------------------------------------------------------
+    # Show ---------------------------------------------------------#
     plt.tight_layout()
     plt.savefig("fig_temp.png",transparent=True)
     plt.close('all')
 
+    # END----------------------------------------------------------#
+
 def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_ids,chbx_offline,chbx_HostFire):
-    #Starting Susceptible
+    # Starting Susceptible ----------------------------------------------------#
     N0 = sbx_healthy.value()
-    # Initial number of infected
+
+    # Initial number of infected ---------------------------------------------#
     I0 = sbx_infected.value()
-    #Total Population
+
+    # Total Population --------------------------------------------------------#
     P0 = I0 + N0
-    # Days to run
+
+    # Days to run ------------------------------------------------------------#
     D0 = sbx_days.value()
 
-    beta = int(sbx_propagation.value()) / 100
-
+    # Propagation Rate With Check Box edits ----------------------------------#
     beta = int(sbx_propagation.value()) / 100
     if chbx_ids.isChecked():
         # Contact rate
@@ -427,45 +385,46 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         # Contact rate
         beta = (beta * (random.uniform(0.65, 0.75)))
 
-    # recovery rate
+    # recovery rate --------------------------------------------------------#
     gamma = int(sbx_r_chance.value()) / 1000
-    # recovered individuals
-    # recovered individuals
+
+    # Recovered individuals With Check Box edits
     if chbx_offline.isChecked():
         R0 = sbx_healthy.value() - (sbx_healthy.value() / (random.uniform(1.3, 1.5)))
     else:
         R0 = 0
-    # work out susceptible
+
+    # work out susceptible --------------------------------------------------#
     S0 = N0 - I0 - R0
-    # A grid of time points (in days)
+
+    # A grid of time points -------------------------------------------------#
     t = np.linspace(0, D0, D0)
 
-    # The SIR model differential equations
+    # The SIS model differential equations ----------------------------------#
     def deriv(y, t, N0, beta, gamma):
         S, I  = y
         dSdt = -(beta * S * I) / N0 + (gamma * I)
         dIdt = (beta * S * I) / N0 - (gamma * I)
         return dSdt, dIdt
 
-    # Initial conditions vector
+    # Initial conditions vector ---------------------------------------------#
     y0 = S0, I0
 
     # Integrate the SIR equations over the time grid, t.
     ret = odeint(deriv, y0, t, args=(N0, beta, gamma))
     S, I = ret.T
 
-    # ------------------------------------GRAPHS----------------------------#
+    # --------------------------------------------------------GRAPHS-------------------------------------------------------------#
 
-    # Plot the data
+    # Plot the data ---------------------------------------------------------#
     fig, axs = plt.subplots(2, 2,figsize=(15.3, 7.9))
 
-    # TOP LEFT plot---------------------------------------------------------
+    # TOP LEFT plot ---------------------------------------------------------#
     axs[0, 0].set_title("Timeline Overview",fontweight="bold")
     try:
         plt.setp(axs[0, 0], xlabel="Time (Hours)")
         plt.setp(axs[0, 0], ylabel="Total Susceptible Devices")
         axs[0, 0].grid()
-
         axs[0, 0].plot(t, S, label='Unaffected Devices', color='tab:blue')
         axs[0, 0].plot(t, I, linestyle='--', label='Infected', color='tab:orange')
 
@@ -474,43 +433,32 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
         axs[0, 0].spines['bottom'].set_color('black')
         axs[0, 0].spines['left'].set_color('black')
-
         axs[0, 0].axvline(I.argmax(axis=0), linestyle=':', color='silver')
-        axs[0, 0].text(I.argmax(axis=0) + 3, np.amax(N0 * 0.15),
-                       'Peak Infected By Hour: {}'.format(int((I.argmax(axis=0)))), color='black', rotation=90)
-
+        axs[0, 0].text(I.argmax(axis=0) + 3, np.amax(N0 * 0.15),'Peak Infected By Hour: {}'.format(int((I.argmax(axis=0)))), color='black', rotation=90)
 
         for spine in ('top', 'right'):
             axs[0, 0].spines[spine].set_visible(False)
 
         axs[0, 0].legend(['Unaffected', 'Infected'], loc='best',
                          ncol=1, fancybox=True)
+
     except Exception as e:
         print(e)
 
-    # TOP Right plot---------------------------------------------------------
+    # TOP Right plot  ---------------------------------------------------------#
     axs[0, 1].set_title("Status Distribution on Day {}".format(int(D0/24)),fontweight="bold")
     try:
-
         labels = 'Unaffected', 'Infected'
-
         colors = ['tab:blue', 'tab:orange']
-
         sizes = [S[-1]/P0*100, I[-1]/P0*100]
-
-
         labels = [f'{l} | {s:0.1f}%' for l, s in zip(labels, sizes)]
-
-        axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': '#f0f0f0'},
-                      pctdistance=0.8, labeldistance=1.07, startangle=90, colors=colors)
-
+        axs[0, 1].pie(np.abs(sizes), wedgeprops={'width': 0.4, 'linewidth': 1, 'edgecolor': '#f0f0f0'},pctdistance=0.8, labeldistance=1.07, startangle=90, colors=colors)
         axs[0, 1].legend(labels, loc="best")
-
         axs[0, 1].axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
     except Exception as e:
         print(e)
 
-    # Bottom Right plot---------------------------------------------------------
+    # Bottom Right plot  ---------------------------------------------------------#
 
     axs[1, 1].set_title("Change in Infected Per Hour".format(D0), fontweight="bold")
     try:
@@ -525,13 +473,9 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         Ilower = np.ma.masked_where(IDiff > lower, IDiff)
 
         axs[1, 1].plot(np.delete(t, 0), Iupper, color='crimson')
-
         axs[1, 1].axhline(0, linestyle=':', color='silver')
-
         axs[1, 1].plot(np.delete(t, 0), Ilower, color='tab:green')
-
-        axs[1, 1].legend(['Increasing Infected', 'Zero Change', 'Decreasing  Infected'], loc='best',
-                         ncol=1, fancybox=True)
+        axs[1, 1].legend(['Increasing Infected', 'Zero Change', 'Decreasing  Infected'], loc='best',ncol=1, fancybox=True)
 
         plt.setp(axs[1, 1], xlabel="Time (Hours)")
         plt.setp(axs[1, 1], ylabel="Change in Infected")
@@ -545,7 +489,7 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
     except Exception as e:
         print(e)
 
-    # Bottom Left plot----------------------------------------------------------
+    # Bottom Left plot  ---------------------------------------------------------#
     try:
         axs[1, 0].set_title("Total Infections Per Hour", fontweight="bold")
         axs[1, 0].grid()
@@ -566,17 +510,11 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
         z = np.polyfit(t, I, 1)
         p = np.poly1d(z)
+
         axs[1, 0].plot(t, p(t), color='silver',linestyle='-.')
-
-        axs[1, 0].legend(['>50%','25%-50%','0-25%','Trendline'], loc='best',
-                         ncol=1, fancybox=True,title='% of Susceptible Infected')
-
+        axs[1, 0].legend(['>50%','25%-50%','0-25%','Trendline'], loc='best',ncol=1, fancybox=True,title='% of Susceptible Infected')
         axs[1, 0].spines['bottom'].set_color('black')
         axs[1, 0].spines['left'].set_color('black')
-
-        #axs[1, 0].plot(t, N0 / 2, linestyle='--', color='silver')
-        #axs[1, 0].plot(t, N0 / 4, linestyle='--', color='silver')
-
         axs[1, 0].axhline(N0 / 2, linestyle=':', color='silver')
         axs[1, 0].axhline(N0 / 4, linestyle=':', color='silver')
 
@@ -587,9 +525,10 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
     except Exception as e:
         print(e)
 
-    # --------------------------------------------------------------------------------------------------------------------
+    # Show ---------------------------------------------------------#
 
-    #plt.subplots_adjust(left=0.06, bottom=0.055, right=0.98, top=0.97, wspace=0.2, hspace=0.2)
     plt.tight_layout()
     plt.savefig("fig_temp.png",transparent=True)
     plt.close('all')
+
+    # END----------------------------------------------------------#
