@@ -55,6 +55,11 @@ Susceptible ⇢ Infected ⇢ Recovered or Irrecoverable (Deceased)
 ``` 
 Susceptible ⇢ Exposed ⇢ Infected ⇢ Recovered
 ```
+## Misc
+<h6 align="center">Progress Timeline</h6>
+
+![Progress Timeline](https://user-images.githubusercontent.com/29525942/161328830-f0dbc97e-5dbb-477e-8ddf-0f16408e4de7.png)
+
 
 ## Authors
 
