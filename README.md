@@ -9,14 +9,11 @@
 The Computer Virus Spread Visualisation Tool is designed for users who may want to gain an understanding of how a computer virus *could potentially* spread under specified parameters, such as recovery and propagation rates, IDS/IPS status and amount of offline nodes etc.
 
 ## Screenshots
-<h6 align="center">Main Window</h6>
 
 ![Main Window](https://github.com/Matt-Caine/VirusSpread/blob/main/Documents/Screenshots/Screenshot.png)
-
-<h6 align="center">Comparison Mode</h6>
-
 ![Main Window With Comparison Window Open](https://github.com/Matt-Caine/VirusSpread/blob/main/Documents/Screenshots/Progress%204.png)
 
+<h6 align="center">Screenshots show the Main Window and the Main Window With Comparison Mode Open</h6>
 
 ## Compartmental Models
 Compartmental models are common modelling formulas, often applied in the field of epidemiology to model the spread of infectious diseases and virus. These models, though designed for biological viruses, will hopefully help users better understand the impact a computer virus could have, but also highlight how mitigations such as Firewalls and IDS can help slow the spread. 
