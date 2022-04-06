@@ -6,7 +6,6 @@ from PyQt5.QtGui import QPixmap
 import os
 import uuid
 
-# My Models Lib
 from models import SIR, SIRD, SIS
 
 class Splash(QSplashScreen):
@@ -45,7 +44,6 @@ class Disclaimer(QMainWindow):
 
         self.disclaimer.setWindowIcon(QtGui.QIcon('Icon.ico'))
 
-
         # Default Answers-------------------------------------------------#
         self.disclaimer.setDefaultButton(self.disclaimer.Yes)
         self.disclaimer.setEscapeButton(self.disclaimer.Abort)
@@ -63,7 +61,8 @@ class Disclaimer(QMainWindow):
         # Answer + Console Out 2 -----------------------------------------#
         if disclaimer_answer == self.disclaimer.Abort:
             print(" - Disclaimer Abort\n[Quit]")
-            quit()
+            #quit()
+            sys.exit()
         else:
             print(" - Disclaimer OK")
 
@@ -127,13 +126,19 @@ class Window(QMainWindow):
         #dropodown
         self.cbx_viruses = QtWidgets.QComboBox(self)
 
-        # Header
-        self.lbl_Param_Header = QtWidgets.QLabel(self)
-        self.lbl_virus_Header = QtWidgets.QLabel(self)
-        self.lbl_simulation_Header = QtWidgets.QLabel(self)
-        self.lbl_other_Header = QtWidgets.QLabel(self)
-        self.lbl_settings_Header = QtWidgets.QLabel(self)
-        self.lbl_actions_Header = QtWidgets.QLabel(self)
+        # Headers
+        self.lbl_Param_Header = QtWidgets.QLabel("𝗚𝗹𝗼𝗯𝗮𝗹 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:",self)
+        self.lbl_virus_Header = QtWidgets.QLabel("𝗩𝗶𝗿𝘂𝘀 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:",self)
+        self.lbl_simulation_Header = QtWidgets.QLabel("𝗦𝗶𝗺𝘂𝗹𝗮𝘁𝗶𝗼𝗻 𝗜𝗗:",self)
+        self.lbl_other_Header = QtWidgets.QLabel("𝗠𝗶𝘀𝗰 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:",self)
+        self.lbl_actions_Header = QtWidgets.QLabel("𝗔𝗰𝘁𝗶𝗼𝗻 𝗕𝘂𝘁𝘁𝗼𝗻𝘀:",self)
+
+        self.lbl_simulation_Header.move(145, 50)
+        self.lbl_Param_Header.move(15, 50)
+        self.lbl_virus_Header.move(15, 260)
+        self.lbl_other_Header.move(15, 470)
+        self.lbl_actions_Header.move(15, 740)
+        self.lbl_sim_name.move(220, 50)
 
         # propagation_chance group
         self.sbx_propagation = QtWidgets.QSpinBox(self)
@@ -176,7 +181,7 @@ class Window(QMainWindow):
         self.figure.setEnabled(True)
 
         #Me
-        self.lbl_MattCaine = QtWidgets.QLabel(self)
+        self.lbl_Disclaimer = QtWidgets.QLabel("*This tool should only be used as an estimate and should not be considered 100% accurate || © Matt Caine - UoP - Comp3000 Project", self)
 
         #-----------------------------------------------------------------------------------------------Other section
         self.chbx_ids = QtWidgets.QCheckBox("Network IDS/IPS",self)
@@ -184,6 +189,8 @@ class Window(QMainWindow):
 
         self.chbx_offline = QtWidgets.QCheckBox("Realistic Nodes", self)
         self.chbx_offline.setToolTip('Takes into account that devices are not on 24/7.')
+
+        self.chbx_offline.setChecked(True)
 
         self.chbx_HostFire = QtWidgets.QCheckBox("Host Firewalls", self)
         self.chbx_HostFire.setToolTip('Simulates the presence of host based firewalls.')
@@ -219,29 +226,19 @@ class Window(QMainWindow):
         self.header.setPixmap(self.Head_img)
         self.header.resize(1920, 50)
 
-        self.lbl_MattCaine.setText("*This tool should only be used as an estimate and should not be considered 100% accurate || © Matt Caine - UoP - Comp3000 Project")
-        self.lbl_MattCaine.setGeometry(1030, 875, 1000, 20)
+        self.lbl_Disclaimer.setGeometry(1030, 875, 1000, 20)
 
         self.sbx_hibernation.setDisabled(True)
         self.sbx_mortality.setDisabled(True)
 
         # ----------------------------------Titles----------------------------------#
 
-        self.lbl_simulation_Header.setText("𝗦𝗶𝗺𝘂𝗹𝗮𝘁𝗶𝗼𝗻 𝗜𝗗:")
+
         self.lbl_simulation_Header.move(145, 50)
-
-        self.lbl_Param_Header.setText("𝗚𝗹𝗼𝗯𝗮𝗹 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:")
         self.lbl_Param_Header.move(15, 50)
-
-        self.lbl_virus_Header.setText("𝗩𝗶𝗿𝘂𝘀 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:")
         self.lbl_virus_Header.move(15, 260)
-
-        self.lbl_other_Header.setText("𝗠𝗶𝘀𝗰 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:")
         self.lbl_other_Header.move(15, 470)
-
-        self.lbl_actions_Header.setText("𝗔𝗰𝘁𝗶𝗼𝗻 𝗕𝘂𝘁𝘁𝗼𝗻𝘀:")
         self.lbl_actions_Header.move(15, 740)
-
         self.lbl_sim_name.move(220, 50)
 
         #----------------------------------parameter Section----------------------------------#
@@ -389,7 +386,6 @@ class Window(QMainWindow):
 
         self.btn_folder.setToolTip("Open Export Folder | Coming Soon...")
 
-
         #--------Run Sim Button--------#
         self.btn_simulate.move(19, 841)
         self.btn_simulate.clicked.connect(self.simulate)
@@ -406,13 +402,11 @@ class Window(QMainWindow):
         self.btn_pin.clicked.connect(self.set_pin)
         self.btn_pin.clicked.connect(self.sub_window.show)
 
-
     # ----------------------------------Functions----------------------------------#
     # --------Test Button--------#
     @staticmethod
     def Click_test():
         print("Button Clicked")
-
 
     def set_pin(self):
         try:
@@ -423,18 +417,17 @@ class Window(QMainWindow):
             self.msg_box.setText("🛑 Error | {} ".format(e))
             self.msg_box.exec_()
 
-
     # --------Progress--------#
     def progressbar(self):
         try:
             self.completed = 0
             self.progress.show()
-            self.lbl_MattCaine.hide()
+            self.lbl_Disclaimer.hide()
             while self.completed < 100:
                 self.completed += 0.0005
                 self.progress.setValue(self.completed)
             self.progress.hide()
-            self.lbl_MattCaine.show()
+            self.lbl_Disclaimer.show()
         except Exception as e:
             self.msg_box.setText("🛑 {}".format(e))
             self.msg_box.exec_()
@@ -530,6 +523,7 @@ class Window(QMainWindow):
             if self.cbx_Virus_Model.currentIndex() == 0:
                 SIR(self.sbx_healthy, self.sbx_infected, self.sbx_days,
                     self.sbx_propagation, self.sbx_r_chance, self.chbx_ids, self.chbx_offline,self.chbx_HostFire)
+
             # SIRD
             elif self.cbx_Virus_Model.currentIndex() == 1:
                 SIRD(self.sbx_healthy, self.sbx_infected, self.sbx_days,
@@ -561,10 +555,10 @@ class SubWindow(QMainWindow):
         # Window--------------------------------------------------------#
         self.setWindowTitle("| Computer Virus Spread Visualization 2022 - 📌 Pinned Figure")
         self.setWindowIcon(QtGui.QIcon('Icon.ico'))
-        self.lbl_MattCaine = QtWidgets.QLabel(self)
-        self.lbl_MattCaine.setText("*This tool should only be used as an estimate and should not be considered "
+        self.lbl_Disclaimer = QtWidgets.QLabel(self)
+        self.lbl_Disclaimer.setText("*This tool should only be used as an estimate and should not be considered "
                                    "100% accurate | © Matt Caine - UoP - Comp3000 Project")
-        self.lbl_MattCaine.setGeometry(870, 785, 1000, 20)
+        self.lbl_Disclaimer.setGeometry(870, 785, 1000, 20)
 
         # Grab and set Image --------------------------------------------------#
         self.figure = QtWidgets.QLabel(self)
@@ -594,8 +588,8 @@ def window():
     win = Window()
     splash = Splash()
     splash.show()
-    time.sleep(1.5)
     Disclaimer()
+    time.sleep(1.5)
     splash.hide()
     print("[Execute Main Window]")
     win.show()

@@ -1,0 +1,12 @@
+ID: SIR-03b7c
+Model: S.I.R
+
+Starting Susceptible: 25000
+Starting Infected: 100
+Hours Shown: 336
+
+Propagation Rate: 5
+Recovery Rate: 10
+Mortality Rate: 5
+# Mortality Only Applicable for S.I.R/D
+
