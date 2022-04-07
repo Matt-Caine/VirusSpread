@@ -31,9 +31,6 @@ The tool is written in python and utilises the following libraries:
 - [SciPy](https://scipy.org/)
 
 ## Miscellaneous
-### Progress Timeline
-![Progress Timeline](https://user-images.githubusercontent.com/29525942/161639458-f0fb9ef5-fb6f-4b91-8c9f-fdd55385a2cc.png)
-
 ### Colour Palette
 ![Colours](https://user-images.githubusercontent.com/29525942/161639343-1886b24c-5a7c-43fa-958c-eca680eb30ed.png)
 
