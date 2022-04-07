@@ -52,8 +52,8 @@ class Disclaimer(QMainWindow):
         print("[Disclaimer]")
 
         # MSG BOX Set - ---------------------------------------------------#
-        disclaimer_answer = self.disclaimer.question(self, "| Computer Virus Spread Visualization 2022 Disclaimer",
-                                                     "𝗗𝗶𝘀𝗰𝗹𝗮𝗶𝗺𝗲𝗿:\nThe developer of Computer Virus Spread Visualization 2022 cannot be held responsible for your use of the information provided. "
+        disclaimer_answer = self.disclaimer.question(self, "| Computer Virus Spread Visualization Tool Disclaimer",
+                                                     "𝗗𝗶𝘀𝗰𝗹𝗮𝗶𝗺𝗲𝗿:\nThe developer of Computer Virus Spread Visualization Tool cannot be held responsible for your use of the information provided. "
                                                      "This tool should only be used as an estimate and should not be considered 100% accurate. "
                                                      "\n\n𝗗𝗼 𝘆𝗼𝘂 𝘂𝗻𝗱𝗲𝗿𝘀𝘁𝗮𝗻𝗱? \n",
                                                      self.disclaimer.Yes | self.disclaimer.Abort)
@@ -71,7 +71,6 @@ class Disclaimer(QMainWindow):
 class Window(QMainWindow):
     def __init__(self):
         super(Window, self).__init__()
-
         # Widgets ----------------------------------------------------------------#
         # Sim Button
         self.btn_simulate = QtWidgets.QPushButton("📈 | Simulate",self)
@@ -88,15 +87,19 @@ class Window(QMainWindow):
         # Save Button
         self.btn_Save = QtWidgets.QPushButton("💾 | Export", self)
 
+        #WaterMark
+        self.WaterMark_img = QPixmap('LogoWaterMark.png')
+        self.WaterMark = QtWidgets.QLabel(self)
+
         # Save msg Box
         self.Save_msg = QMessageBox()
         self.Save_msg.setWindowIcon(QtGui.QIcon('Icon.ico'))
-        self.Save_msg.setWindowTitle("| Computer Virus Spread Visualization 2022")
+        self.Save_msg.setWindowTitle("| Computer Virus Spread Visualization Tool")
 
         # Gen use Msg box
         self.msg_box = QMessageBox()
         self.msg_box.setWindowIcon(QtGui.QIcon('Icon.ico'))
-        self.msg_box.setWindowTitle("| Computer Virus Spread Visualization 2022")
+        self.msg_box.setWindowTitle("| Computer Virus Spread Visualization Tool")
 
         # Progress bar
         self.progress = QtWidgets.QProgressBar(self)
@@ -208,16 +211,17 @@ class Window(QMainWindow):
 
         # Window frame settings
         self.setFixedSize(1700, 900)
-        self.setWindowTitle("| Computer Virus Spread Visualization 2022")
+        self.setWindowTitle("| Computer Virus Spread Visualization Tool")
         self.initUI()
         self.simulate()
 
     def initUI(self):
-
         qtRectangle = self.frameGeometry()
         centerPoint = QDesktopWidget().availableGeometry().center()
         qtRectangle.moveCenter(centerPoint)
         self.move(qtRectangle.topLeft())
+
+        self.setWindowOpacity(0.96)
 
         #window Icon
         self.setWindowIcon(QtGui.QIcon('Icon.ico'))
@@ -226,8 +230,11 @@ class Window(QMainWindow):
         self.header.setPixmap(self.Head_img)
         self.header.resize(1920, 50)
 
-        self.lbl_Disclaimer.setGeometry(1030, 875, 1000, 20)
+        self.WaterMark.setPixmap(self.WaterMark_img)
+        self.WaterMark.resize(555, 482)
+        self.WaterMark.move(580, 240)
 
+        self.lbl_Disclaimer.setGeometry(1030, 875, 1000, 20)
         self.sbx_hibernation.setDisabled(True)
         self.sbx_mortality.setDisabled(True)
 
@@ -508,7 +515,6 @@ class Window(QMainWindow):
         else:
             self.figure.setEnabled(True)
 
-
     #--------------------------------------------------------------simulate MODELS------------------------------------------------------------------------#
     def simulate(self):
         try:
@@ -553,7 +559,7 @@ class SubWindow(QMainWindow):
     def __init__(self):
         super(SubWindow, self).__init__()
         # Window--------------------------------------------------------#
-        self.setWindowTitle("| Computer Virus Spread Visualization 2022 - 📌 Pinned Figure")
+        self.setWindowTitle("| Computer Virus Spread Visualization Tool - 📌 Pinned Figure")
         self.setWindowIcon(QtGui.QIcon('Icon.ico'))
         self.lbl_Disclaimer = QtWidgets.QLabel(self)
         self.lbl_Disclaimer.setText("*This tool should only be used as an estimate and should not be considered "
@@ -588,8 +594,8 @@ def window():
     win = Window()
     splash = Splash()
     splash.show()
+    time.sleep(1)
     Disclaimer()
-    time.sleep(1.5)
     splash.hide()
     print("[Execute Main Window]")
     win.show()

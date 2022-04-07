@@ -76,7 +76,7 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
             axs[0, 0].plot(t, I, linestyle='--', label='Infected', color='#FF7F0E')
             axs[0, 0].plot(t, R, label='Recovered & Protected', color='#32A62E')
             axs[0, 0].axvline(I.argmax(axis=0), linestyle=':', color='silver')
-            axs[0, 0].text(I.argmax(axis=0) + 3, np.amax(N0*0.15), 'Peak Infected By Hour: {}'.format(int((I.argmax(axis=0)))), color='black',rotation=90)
+            axs[0, 0].text(I.argmax(axis=0) + 3, np.amax(0),'Peak Infected By Hour: {}'.format(int((I.argmax(axis=0)))), color='black')
 
             legend = axs[0, 0].legend()
             legend.get_frame().set_alpha(0.5)
@@ -257,8 +257,7 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
             legend.get_frame().set_alpha(0.5)
 
             axs[0, 0].axvline(I.argmax(axis=0), linestyle=':', color='silver')
-            axs[0, 0].text(I.argmax(axis=0) + 3, np.amax(N0 * 0.15),
-                           'Peak Infected By Hour: {}'.format(int((I.argmax(axis=0)))), color='black', rotation=90)
+            axs[0, 0].text(I.argmax(axis=0) + 3, np.amax(0),'Peak Infected By Hour: {}'.format(int((I.argmax(axis=0)))), color='black')
 
             axs[0, 0].spines['bottom'].set_color('black')
             axs[0, 0].spines['left'].set_color('black')
@@ -435,7 +434,7 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
             axs[0, 0].spines['bottom'].set_color('black')
             axs[0, 0].spines['left'].set_color('black')
             axs[0, 0].axvline(I.argmax(axis=0), linestyle=':', color='silver')
-            axs[0, 0].text(I.argmax(axis=0) + 3, np.amax(N0 * 0.15),'Peak Infected By Hour: {}'.format(int((I.argmax(axis=0)))), color='black', rotation=90)
+            axs[0, 0].text(I.argmax(axis=0) + 3, np.amax(0),'Peak Infected By Hour: {}'.format(int((I.argmax(axis=0)))), color='black')
 
             for spine in ('top', 'right'):
                 axs[0, 0].spines[spine].set_visible(False)
