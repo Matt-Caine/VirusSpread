@@ -52,7 +52,7 @@ class Disclaimer(QMainWindow):
         print("[Disclaimer]")
 
         # MSG BOX Set - ---------------------------------------------------#
-        disclaimer_answer = self.disclaimer.question(self, "| Computer Virus Spread Visualization Tool Disclaimer",
+        disclaimer_answer = self.disclaimer.question(self, "Computer Virus Spread Visualization Tool Disclaimer",
                                                      "𝗗𝗶𝘀𝗰𝗹𝗮𝗶𝗺𝗲𝗿:\nThe developer of Computer Virus Spread Visualization Tool cannot be held responsible for your use of the information provided. "
                                                      "This tool should only be used as an estimate and should not be considered 100% accurate. "
                                                      "\n\n𝗗𝗼 𝘆𝗼𝘂 𝘂𝗻𝗱𝗲𝗿𝘀𝘁𝗮𝗻𝗱? \n",
@@ -81,11 +81,15 @@ class Window(QMainWindow):
         # Folder Button
         self.btn_folder = QtWidgets.QPushButton("📁", self)
 
+        # Model Info Button
+        self.btn_Info = QtWidgets.QPushButton("❓", self)
+        self.btn_Info.hide()
+
         # Undo Button
         self.btn_undo = QtWidgets.QPushButton("🔙", self)
 
         # Save Button
-        self.btn_Save = QtWidgets.QPushButton("💾 | Export", self)
+        self.btn_Save = QtWidgets.QPushButton("💾 | Save", self)
 
         #WaterMark
         self.WaterMark_img = QPixmap('LogoWaterMark.png')
@@ -94,12 +98,12 @@ class Window(QMainWindow):
         # Save msg Box
         self.Save_msg = QMessageBox()
         self.Save_msg.setWindowIcon(QtGui.QIcon('Icon.ico'))
-        self.Save_msg.setWindowTitle("| Computer Virus Spread Visualization Tool")
+        self.Save_msg.setWindowTitle("Computer Virus Spread Visualization Tool")
 
         # Gen use Msg box
         self.msg_box = QMessageBox()
         self.msg_box.setWindowIcon(QtGui.QIcon('Icon.ico'))
-        self.msg_box.setWindowTitle("| Computer Virus Spread Visualization Tool")
+        self.msg_box.setWindowTitle("Computer Virus Spread Visualization Tool")
 
         # Progress bar
         self.progress = QtWidgets.QProgressBar(self)
@@ -133,7 +137,7 @@ class Window(QMainWindow):
         self.lbl_Param_Header = QtWidgets.QLabel("𝗚𝗹𝗼𝗯𝗮𝗹 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:",self)
         self.lbl_virus_Header = QtWidgets.QLabel("𝗩𝗶𝗿𝘂𝘀 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:",self)
         self.lbl_simulation_Header = QtWidgets.QLabel("𝗦𝗶𝗺𝘂𝗹𝗮𝘁𝗶𝗼𝗻 𝗜𝗗:",self)
-        self.lbl_other_Header = QtWidgets.QLabel("𝗠𝗶𝘀𝗰 𝗣𝗮𝗿𝗮𝗺𝗲𝘁𝗲𝗿𝘀:",self)
+        self.lbl_other_Header = QtWidgets.QLabel("𝗠𝗶𝘀𝗰. 𝗠𝗼𝗱𝗶𝗳𝗶𝗲𝗿𝘀:",self)
         self.lbl_actions_Header = QtWidgets.QLabel("𝗔𝗰𝘁𝗶𝗼𝗻 𝗕𝘂𝘁𝘁𝗼𝗻𝘀:",self)
 
         self.lbl_simulation_Header.move(145, 50)
@@ -211,7 +215,7 @@ class Window(QMainWindow):
 
         # Window frame settings
         self.setFixedSize(1700, 900)
-        self.setWindowTitle("| Computer Virus Spread Visualization Tool")
+        self.setWindowTitle("Computer Virus Spread Visualization Tool")
         self.initUI()
         self.simulate()
 
@@ -380,6 +384,10 @@ class Window(QMainWindow):
 
         self.btn_undo.setToolTip("Undo Reset | Coming Soon...")
 
+        # --------info Button--------#
+        self.btn_Info.resize(27, 27)
+        self.btn_Info.move(120, 89)
+        self.btn_Info.setToolTip("Find out more about the models")
 
         #--------Save Button--------#
 
@@ -505,15 +513,24 @@ class Window(QMainWindow):
             self.sbx_r_chance.setValue(10)
             self.cbx_viruses.setCurrentIndex(0)
             self.sbx_mortality.setValue(5)
-            self.chbx_offline.setChecked(False)
             self.chbx_ids.setChecked(False)
             self.chbx_HostFire.setChecked(False)
+            self.chbx_offline.setChecked(True)
 
             # Run Sim again to Clear
             self.simulate()
             self.figure.setEnabled(True)
         else:
             self.figure.setEnabled(True)
+
+    def closeEvent(self, event):
+        self.figure.setEnabled(False)
+        close = QtWidgets.QMessageBox.question(self,"Close? ","Are you sure to Close? Any unsaved figures will be lost. ", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        if close == QtWidgets.QMessageBox.Yes:
+            event.accept()
+        else:
+            self.figure.setEnabled(True)
+            event.ignore()
 
     #--------------------------------------------------------------simulate MODELS------------------------------------------------------------------------#
     def simulate(self):
@@ -547,7 +564,7 @@ class Window(QMainWindow):
             self.Fig_img = QPixmap('fig_temp.png')
             self.figure.setPixmap(self.Fig_img)
             self.figure.resize(self.Fig_img.width(), self.Fig_img.height())
-            self.figure.move(145, 80)
+            self.figure.move(148, 80)
 
 
         #Error Box
@@ -559,7 +576,7 @@ class SubWindow(QMainWindow):
     def __init__(self):
         super(SubWindow, self).__init__()
         # Window--------------------------------------------------------#
-        self.setWindowTitle("| Computer Virus Spread Visualization Tool - 📌 Pinned Figure")
+        self.setWindowTitle("Computer Virus Spread Visualization Tool - 📌 Pinned Figure")
         self.setWindowIcon(QtGui.QIcon('Icon.ico'))
         self.lbl_Disclaimer = QtWidgets.QLabel(self)
         self.lbl_Disclaimer.setText("*This tool should only be used as an estimate and should not be considered "
@@ -575,6 +592,7 @@ class SubWindow(QMainWindow):
         slider.setGeometry(15, 690, 25, 100)
         slider.setRange(65,100)
         slider.setValue(355)
+
         self.lbl_WindowOpacity = QtWidgets.QLabel(self)
         self.lbl_WindowOpacity.setText("𝗢𝗣𝗔𝗖𝗜𝗧𝗬: " + str(slider.value()/100))
         self.lbl_WindowOpacity.move(5,785)
@@ -583,7 +601,6 @@ class SubWindow(QMainWindow):
             # setting text to the label
             self.lbl_WindowOpacity.setText("𝗢𝗣𝗔𝗖𝗜𝗧𝗬: " + str(slider.value()/100))
             self.setWindowOpacity(slider.value()/100)
-
 
         # END----------------------------------------------------------#
 
@@ -600,5 +617,8 @@ def window():
     print("[Execute Main Window]")
     win.show()
     sys.exit(app.exec_())
-window()
+try:
+    window()
+except Exception as e:
+    print(e)
 
