@@ -195,7 +195,7 @@ class Window(QMainWindow):
         self.chbx_ids.setToolTip('Simulates the presence of a Network IDS/IPS.')
 
         self.chbx_offline = QtWidgets.QCheckBox("Realistic Nodes", self)
-        self.chbx_offline.setToolTip('Takes into account that devices are not on 24/7.')
+        self.chbx_offline.setToolTip('Takes into account that devices may not be turned on 24/7.')
 
         self.chbx_offline.setChecked(True)
 
@@ -377,7 +377,7 @@ class Window(QMainWindow):
         self.btn_reset.move(19, 769)
         self.btn_reset.clicked.connect(self.reset_parameters)
 
-        # --------Reset Button--------#
+        # --------undo Button--------#
         self.btn_undo.resize(30, 30)
         self.btn_undo.move(120, 769)
         self.btn_undo.setEnabled(False)
@@ -397,9 +397,9 @@ class Window(QMainWindow):
         # --------Open folder Button--------#
         self.btn_folder.resize(30, 30)
         self.btn_folder.move(120, 805)
-        self.btn_folder.setEnabled(False)
+        self.btn_folder.clicked.connect(self.open_save)
 
-        self.btn_folder.setToolTip("Open Export Folder | Coming Soon...")
+        self.btn_folder.setToolTip("Open Export Folder")
 
         #--------Run Sim Button--------#
         self.btn_simulate.move(19, 841)
@@ -422,6 +422,13 @@ class Window(QMainWindow):
     @staticmethod
     def Click_test():
         print("Button Clicked")
+
+    def open_save(self):
+        try:
+            os.startfile("Saved")
+        except Exception as e:
+            self.msg_box.setText("🛑 Error | {} ".format(e))
+            self.msg_box.exec_()
 
     def set_pin(self):
         try:
