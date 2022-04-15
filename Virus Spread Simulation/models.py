@@ -114,8 +114,8 @@ def SIR(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
         try:
             axs[1, 1].grid()
             IDiff = np.diff(I)
-            upper = 1
-            lower = -1
+            upper = 0
+            lower = -0
 
             Iupper = np.ma.masked_where(IDiff < upper, IDiff)
             Ilower = np.ma.masked_where(IDiff > lower, IDiff)
@@ -299,8 +299,8 @@ def SIRD(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,sbx_
         try:
             axs[1, 1].grid()
             IDiff = np.diff(I)
-            upper = 1
-            lower = -1
+            upper = 0
+            lower = -0
 
             Iupper = np.ma.masked_where(IDiff < upper, IDiff)
             Ilower = np.ma.masked_where(IDiff > lower, IDiff)
@@ -474,8 +474,8 @@ def SIS(sbx_healthy, sbx_infected, sbx_days, sbx_propagation, sbx_r_chance,chbx_
 
             IDiff = np.diff(I)
 
-            upper = 1
-            lower = -1
+            upper = 0
+            lower = -0
 
             Iupper = np.ma.masked_where(IDiff < upper, IDiff)
             Ilower = np.ma.masked_where(IDiff > lower, IDiff)
