@@ -7,6 +7,10 @@
 
 ## About
 The Computer Virus Spread Visualisation Tool is designed for users who may want to gain an understanding of how a computer virus *could potentially* spread under specified parameters, such as recovery and propagation rates, IDS/IPS status and amount of offline nodes etc.
+## Installation
+1. Download latest release by clicking [here](https://github.com/Matt-Caine/VirusSpread/releases/download/v0.1/Computer.Virus.Spread.Visualisation.Tool.zip)
+2. Extract contents.
+3. Run "main.exe" within the extracted file. Create a desktop shortcut if desired. 
 
 ## Screenshots
 ![Main Window](https://user-images.githubusercontent.com/29525942/162276730-a61503e1-e679-4b06-b8ac-2804e0483eba.png)
@@ -23,7 +27,7 @@ Compartmental models are common modelling formulas, often applied in the field o
 | :---:  | :---:  |   :---:  |
 | ![SIR](https://user-images.githubusercontent.com/29525942/159133833-18550d4b-14c0-4462-982f-d1213677621f.png)  | ![SIS](https://user-images.githubusercontent.com/29525942/159133840-aec51437-be4f-4555-b09f-5d7e83e8504c.png)  | ![SIRD](https://user-images.githubusercontent.com/29525942/159133843-fd95ad7f-5760-4dc2-b4d0-6f3522518d6a.png)  |
   
-## Technology
+## Technology/Acknowledgments
 The tool is written in python and utilises the following libraries:
 - [PyQT5](https://pypi.org/project/PyQt5/)
 - [NumPy](https://numpy.org/)
@@ -37,3 +41,6 @@ The tool is written in python and utilises the following libraries:
 ## Authors
 
 [Matt Caine](https://github.com/Matt-Caine)
+- [Website](https://matt-caine.github.io/)
+- [Twitter](https://twitter.com/MattCaine_)
+
