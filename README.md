@@ -9,8 +9,8 @@
 The Computer Virus Spread Visualisation Tool is designed for users who may want to gain an understanding of how a computer virus *could potentially* spread under specified parameters, such as recovery and propagation rates, IDS/IPS status and amount of offline nodes etc.
 ## Installation
 1. Download latest release by clicking [here](https://github.com/Matt-Caine/VirusSpread/releases/download/v0.1/Computer.Virus.Spread.Visualisation.Tool.zip)
-2. Extract contents.
-3. Run "main.exe" within the extracted file. Create a desktop shortcut if desired. 
+2. Extract contents of the .zip
+3. Run "main.exe" within the extracted folder
 
 ## Screenshots
 ![Main Window](https://user-images.githubusercontent.com/29525942/162276730-a61503e1-e679-4b06-b8ac-2804e0483eba.png)
