@@ -188,7 +188,8 @@ class Window(QMainWindow):
         self.figure.setEnabled(True)
 
         #Me
-        self.lbl_Disclaimer = QtWidgets.QLabel("*This tool should only be used as an estimate and should not be considered 100% accurate || © Matt Caine - UoP - Comp3000 Project", self)
+        self.lbl_Disclaimer = QtWidgets.QLabel("*This tool should only be used as an estimate and "
+                                               "should not be considered 100% accurate || © Matt Caine - UoP - Comp3000 Project", self)
 
         #-----------------------------------------------------------------------------------------------Other section
         self.chbx_ids = QtWidgets.QCheckBox("Network IDS/IPS",self)
@@ -199,19 +200,30 @@ class Window(QMainWindow):
 
         self.chbx_offline.setChecked(True)
 
-        self.chbx_HostFire = QtWidgets.QCheckBox("Host Firewalls", self)
+        self.chbx_HostFire = QtWidgets.QCheckBox("Host Based Firewalls", self)
         self.chbx_HostFire.setToolTip('Simulates the presence of host based firewalls.')
 
         #-------------------------------Dev----------------------------------------------
 
-        self.chbx_4 = QtWidgets.QCheckBox("Coming Soon", self)
+        self.chbx_4 = QtWidgets.QCheckBox("Awareness Training", self)
         #self.chbx_4.setToolTip('This is a tooltip for the QPushButton widget')
+
         self.chbx_5 = QtWidgets.QCheckBox("Coming Soon", self)
         #self.chbx_5.setToolTip('This is a tooltip for the QPushButton widget')
+        self.chbx_6 = QtWidgets.QCheckBox("Coming Soon", self)
+        # self.chbx_6.setToolTip('This is a tooltip for the QPushButton widget')
+        self.chbx_7 = QtWidgets.QCheckBox("Coming Soon", self)
+        # self.chbx_7.setToolTip('This is a tooltip for the QPushButton widget')
+        self.chbx_8 = QtWidgets.QCheckBox("Coming Soon", self)
+        # self.chbx_8.setToolTip('This is a tooltip for the QPushButton widget')
 
         # Disable buttons
         self.chbx_4.setEnabled(False)
         self.chbx_5.setEnabled(False)
+        self.chbx_6.setEnabled(False)
+        self.chbx_7.setEnabled(False)
+        self.chbx_8.setEnabled(False)
+
 
         # Window frame settings
         self.setFixedSize(1700, 900)
@@ -276,7 +288,7 @@ class Window(QMainWindow):
         self.cbx_Virus_Model.currentTextChanged.connect(self.on_model_combobox_changed)
 
         #--------Susceptible--------#
-        self.lbl_healthy.setText("Starting Susceptible")
+        self.lbl_healthy.setText("Overall Susceptible")
         self.lbl_healthy.move(20, 113)
 
         self.sbx_healthy.move(19, 137)
@@ -363,12 +375,18 @@ class Window(QMainWindow):
 
         # ----------------------------------other Section----------------------------------#
 
-        self.chbx_ids.move(19, 490)
-        self.chbx_offline.move(19, 510)
+        self.chbx_offline.move(19, 490)
+        self.chbx_ids.move(19, 510)
         self.chbx_HostFire.move(19, 530)
+        self.chbx_HostFire.resize(120, 30)
 
         self.chbx_4.move(19, 550)
+        self.chbx_4.resize(120, 30)
+
         self.chbx_5.move(19, 570)
+        self.chbx_6.move(19, 590)
+        self.chbx_7.move(19, 610)
+        self.chbx_8.move(19, 630)
 
 
         # ----------------------------------SIMSection----------------------------------#
@@ -475,13 +493,19 @@ class Window(QMainWindow):
             self.img.save('Saved/{}/Figure.png'.format(self.ID_Stamp))
 
             with open('Saved/{}/Parameters.txt'.format(self.c2_model_stamp+"-"+self.stamp), 'w') as f:
-                f.write('ID: {}\nModel: {}\n\nStarting Susceptible: {}\nStarting Infected: {}\n'
-                        'Hours Shown: {}\n\nPropagation Rate: {}\nRecovery Rate: {}\nMortality Rate: {}\n'
+                f.write('ID: {}\n'
+                        'Model: {}\n\n'
+                        'Overall Susceptible: {}\n'
+                        'Starting Infected: {}\n'
+                        'Hours Shown: {}\n\n'
+                        'Propagation Rate: {}\n'
+                        'Recovery Rate: {}\n'
+                        'Mortality Rate: {}\n'
                         '# Mortality Only Applicable for S.I.R/D\n\n'.format(self.ID_Stamp,self.cbx_Virus_Model.currentText(),self.sbx_healthy.value(),
                                                                                     self.sbx_infected.value(),self.sbx_days.value(),self.sbx_propagation.value(),
                                                                                     self.sbx_r_chance.value(),self.sbx_mortality.value()))
             #show saved box
-            self.Save_msg.setText("💾 Saved | Figure & Parameters File created in '/Saved/{}'\n\n𝗜𝗗: {}".format(self.ID_Stamp,self.ID_Stamp))
+            self.Save_msg.setText("💾 | {} Saved! \n\n Figure & Parameters File created in '/Saved/{}'".format(self.ID_Stamp,self.ID_Stamp))
             self.Save_msg.exec_()
             self.figure.setEnabled(True)
 
@@ -532,7 +556,7 @@ class Window(QMainWindow):
 
     def closeEvent(self, event):
         self.figure.setEnabled(False)
-        close = QtWidgets.QMessageBox.question(self,"Close? ","Are you sure to Close? Any unsaved figures will be lost. ", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        close = QtWidgets.QMessageBox.question(self,"Close? ","❌ | Are you sure to Close?\n\nAny unsaved figures will be lost. ", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
         if close == QtWidgets.QMessageBox.Yes:
             event.accept()
         else:
