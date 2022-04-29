@@ -38,7 +38,7 @@ The tool is written in python and utilises the following libraries:
 ### Colour Palette
 ![Colours](https://user-images.githubusercontent.com/29525942/161639343-1886b24c-5a7c-43fa-958c-eca680eb30ed.png)
 
-## Authors
+## Creator
 
 [Matt Caine](https://github.com/Matt-Caine)
 - [Website](https://matt-caine.github.io/)
