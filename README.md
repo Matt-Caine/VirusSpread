@@ -13,8 +13,9 @@ The Computer Virus Spread Visualisation Tool is designed for users who may want 
 3. Run "main.exe" within the extracted folder
 
 ## Screenshots
-![Main Window](https://user-images.githubusercontent.com/29525942/162276730-a61503e1-e679-4b06-b8ac-2804e0483eba.png)
-![Main Window With Comparison Window Open](https://user-images.githubusercontent.com/29525942/162276776-d89850b5-2ec6-4757-9a3e-2cc5059efecb.png)
+![Main Window](https://user-images.githubusercontent.com/29525942/165939092-a6325f4d-999b-4ba6-9774-a02ee487874b.png)
+
+![Main Window With Comparison Window Open](https://user-images.githubusercontent.com/29525942/165939155-2e2a98f0-78d6-4f7e-89b5-473424d4f9ab.png)
 
 <h6 align="center">Screenshots show the Main Window and the Main Window With Comparison Mode Open</h6>
 
