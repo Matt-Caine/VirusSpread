@@ -10,7 +10,7 @@ The Computer Virus Spread Visualisation Tool is designed for users who may want 
 ## Installation
 1. Download latest release by clicking [here](https://github.com/Matt-Caine/VirusSpread/releases/download/v0.1/Computer.Virus.Spread.Visualisation.Tool.zip)
 2. Extract contents of the .zip
-3. Run "main.exe" within the extracted folder
+3. Run the "main.exe" that is within the extracted folder
 
 ## Screenshots
 ![Main Window](https://user-images.githubusercontent.com/29525942/165939092-a6325f4d-999b-4ba6-9774-a02ee487874b.png)
