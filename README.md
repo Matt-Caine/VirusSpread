@@ -11,6 +11,14 @@ The Computer Virus Spread Visualisation Tool is designed for users who may want 
 1. Download latest release by clicking [here](https://github.com/Matt-Caine/VirusSpread/releases/download/v0.1/Computer.Virus.Spread.Visualisation.Tool.zip)
 2. Extract contents of the .zip
 3. Run the "main.exe" that is within the extracted folder
+## User Guide
+1. Start the application (Run "main.exe" within the extracted folder or use a shortcut you created.)
+2. Answer the disclaimer that is presented to you on the splash screen.
+3. At the main window, select the virus model via the drop down menu.
+4. Work your way down the side options, customising the parameters and selecting the modifiers you wish to implement in the simulation.
+5. Once done click “Simulate” in the bottom left of the window.
+6. Use the tools available where necessary (Compare Window, Save Model and parameters, Reset settings etc) 
+
 
 ## Screenshots
 ![Main Window](https://user-images.githubusercontent.com/29525942/165939092-a6325f4d-999b-4ba6-9774-a02ee487874b.png)
