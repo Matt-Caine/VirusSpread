@@ -27,6 +27,9 @@ The Computer Virus Spread Visualisation Tool is designed for users who may want 
 
 <h6 align="center">Screenshots show the Main Window and the Main Window With Comparison Mode Open</h6>
 
+## Presentation Poster
+![Poster](https://user-images.githubusercontent.com/29525942/202776965-7615f73b-77ae-4c09-a68a-eea9e155e368.png)
+
 ## Compartmental Models
 Compartmental models are common modelling formulas, often applied in the field of epidemiology to model the spread of infectious diseases and virus. These models, though designed for biological viruses, will hopefully help users better understand the impact a computer virus could have, but also highlight how mitigations such as Firewalls and IDS can help slow the spread. 
 
