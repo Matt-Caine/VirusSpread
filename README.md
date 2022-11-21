@@ -4,8 +4,6 @@
 
 <h1 align="center">Computer Virus Spread Visualisation Tool</h1>
 <h6 align="center">This repository is for my final year univeristy project.</h6>
-<h6 align="center">The associated dissertation for this project can be found below:</h6>
-<h6 align="center">https://github.com/Matt-Caine/VirusSpread/blob/main/Report.pdf</h6>
 <h6 align="center">Project Grade: First </h6>
 
 ## About
